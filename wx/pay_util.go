@@ -10,6 +10,9 @@ import (
 	"crypto/md5"
 	"io"
 
+	"crypto/hmac"
+	"crypto/sha256"
+
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -41,20 +44,27 @@ func GenerateSignature(reqData PayData, key string, signType SignType) (string, 
 	}
 	sign = append(sign, strings.Join([]string{"key", key}, "="))
 	sb := strings.Join(sign, "&")
-	if signType == MD5 {
+	if signType == SIGN_TYPE_MD5 {
 		sb = MakeSignMD5(sb)
 		return sb, nil
-	} else if signType == HMACSHA256 {
-		sb = MakeSignHMACSHA256(sb)
+	} else if signType == SIGN_TYPE_HMACSHA256 {
+		sb = MakeSignHMACSHA256(sb, key)
 		return sb, nil
 	} else {
 		return "", ErrorSignType
 	}
-
 }
 
-func MakeSignMD5(data string) []byte {
+func MakeSignMD5(data string) string {
 	m := md5.New()
 	io.WriteString(m, data)
-	return m.Sum(nil)
+	return strings.ToUpper(string(m.Sum(nil)))
+}
+
+func MakeSignHMACSHA256(data, key string) string {
+	hashed := hmac.New(sha256.New, []byte(key))
+	hashed.Write([]byte(data))
+	//return base64.RawURLEncoding.EncodeToString(hashed.Sum(nil))
+
+	return strings.ToUpper(string(hashed.Sum(nil)))
 }
