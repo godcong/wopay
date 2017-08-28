@@ -23,3 +23,10 @@ func NewDomainInfo(domain string, primary bool) DomainInfo {
 func (info *DomainInfo) String() string {
 	return "DomainInfo{" + "domain='" + info.Domain + "'" + ", primaryDomain=" + strconv.FormatBool(info.PrimaryDomain) + "}"
 }
+
+//func (info *DomainInfo) Report(string, int64, error) {
+//
+//}
+//func (info *DomainInfo) GetDomain(PayConfig) DomainInfo {
+//	return *info
+//}

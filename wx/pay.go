@@ -1,5 +1,7 @@
 package wx
 
+import "log"
+
 type Pay struct {
 	config     PayConfig
 	signType   SignType
@@ -31,24 +33,38 @@ func (p *Pay) unifiedOrderTimeout(reqData PayData, connect int, read int) error 
 	if p.notifyUrl != "" {
 		reqData.Set("notify_url", p.notifyUrl)
 	}
-	_, err := p.RequestWithoutCert(url)
-
+	m, err := p.FillRequestData(reqData)
+	if err != nil {
+		return err
+	}
+	resp, err := p.RequestWithoutCert(url, m)
+	log.Println(resp)
 	return err
 }
 
-func (p *Pay) RequestWithoutCert(url string) (string, error) {
-	var resp string
+func (p *Pay) RequestWithoutCert(url string, reqData PayData) (string, error) {
+	msgUUID := reqData.Get("nonce_str")
+	reqBody, err := MapToXml(reqData)
+	if err != nil {
+		return "", err
+	}
 
-	return resp, nil
+	resp, err := p.payRequest.RequestWithoutCert(url, msgUUID, reqBody, p.config.HttpConnectTimeoutMs, p.config.HttpReadTimeoutMs, p.autoReport)
+
+	return resp, err
 }
 
-func (p *Pay) FillRequestData(reqData PayData) {
+func (p *Pay) FillRequestData(reqData PayData) (PayData, error) {
 	reqData.Set("appid", p.config.AppID)
 	reqData.Set("mch_id", p.config.MchID)
 	reqData.Set("nonce_str", GenerateUUID())
 	reqData.Set("sign_type", p.signType.ToString())
-	reqData.Set("sign", "") //TODO
-
+	sign, e := GenerateSignature(reqData, p.config.Key, p.signType)
+	if e != nil {
+		return nil, e
+	}
+	reqData.Set("sign", sign)
+	return reqData, nil
 }
 
 func (data PayData) Set(key, val string) {

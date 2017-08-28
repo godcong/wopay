@@ -33,3 +33,11 @@ func (request *PayRequest) requestOnce(domain, urlSuffix, uuid, data string, con
 	}
 	return nil
 }
+
+func (request *PayRequest) RequestWithoutCert(url, uuid, body string, connect, read int, auto bool) (string, error) {
+	elapsedTimeMillis := 0
+	startTimestampMs := CurrentTimeStampMS()
+	firstHasDnsErr, firstHasConnectTimeout, firstHasReadTimeout := false, false, false
+	request.config.Domain()
+	return "", nil
+}

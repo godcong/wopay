@@ -23,3 +23,7 @@ func NewPayConfig() PayConfig {
 		ReportBatchSize:      10,
 	}
 }
+
+func (config *PayConfig) GetDomain(PayConfig) DomainInfo {
+
+}
