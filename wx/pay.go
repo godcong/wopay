@@ -49,7 +49,7 @@ func (p *Pay) RequestWithoutCert(url string, reqData PayData) (string, error) {
 		return "", err
 	}
 
-	resp, err := p.payRequest.RequestWithoutCert(url, msgUUID, reqBody, p.config.HttpConnectTimeoutMs, p.config.HttpReadTimeoutMs, p.autoReport)
+	resp, err := p.payRequest.RequestWithoutCert(url, msgUUID, reqBody, p.config.ConnectTimeoutMs, p.config.ReadTimeoutMs, p.autoReport)
 
 	return resp, err
 }
