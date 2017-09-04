@@ -1,0 +1,7 @@
+[system]
+version = "0.0.1"
+
+[wechat]
+appid = "wx3c69535993f4651d"
+appsecret = "f8c7a2cf0c6ed44e2c719964bbe13b1e"
+mchid = "123456"

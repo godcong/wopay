@@ -13,7 +13,7 @@ var (
 
 type PayDomain interface {
 	Report(string, int64, error)
-	GetDomain(PayConfig) DomainInfo
+	GetDomain() DomainInfo
 }
 
 type DomainInfo struct {
@@ -42,12 +42,12 @@ func (info *DomainInfo) String() string {
 var holder PayDomain
 
 func init() {
-	holder = new(payDomainSimple)
+	holder = NewPayDomainSimple()
 }
 
 type payDomainSimple struct {
 	sync.Mutex
-	domainData map[string]DomainStatics
+	domainData map[string]*DomainStatics
 	domainTime int64
 }
 
@@ -65,8 +65,8 @@ type DomainStatics struct {
 	otherErrorCount     int
 }
 
-func NewDomainStatics(domain string) DomainStatics {
-	return DomainStatics{
+func NewDomainStatics(domain string) *DomainStatics {
+	return &DomainStatics{
 		domain:              domain,
 		succCount:           0,
 		connectTimeoutCount: 0,
@@ -108,9 +108,9 @@ func (s *DomainStatics) badCount() int {
 //return connectTimeoutCount + dnsErrorCount * 5 + otherErrorCount / 4;
 //}
 
-func NewPayDomainSimple() payDomainSimple {
-	return payDomainSimple{
-		domainData: make(map[string]DomainStatics),
+func NewPayDomainSimple() *payDomainSimple {
+	return &payDomainSimple{
+		domainData: make(map[string]*DomainStatics),
 	}
 }
 

@@ -14,8 +14,21 @@ type PayConfig struct {
 	cert               []byte
 }
 
-func NewPayConfig() PayConfig {
-	return PayConfig{
+var config *PayConfig
+
+func init() {
+	PayConfigImpl()
+}
+
+func PayConfigImpl() *PayConfig {
+	if config == nil {
+		config = NewPayConfig()
+	}
+	return config
+}
+
+func NewPayConfig() *PayConfig {
+	return &PayConfig{
 		ConnectTimeoutMs:   6000,
 		ReadTimeoutMs:      8000,
 		AutoReport:         true,

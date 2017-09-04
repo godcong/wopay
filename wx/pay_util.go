@@ -98,6 +98,10 @@ func mapToXml(reqData PayData, needHeader bool) (string, error) {
 	return buff.String(), nil
 }
 
+func xmlToMap(xml string) PayData {
+	return PayData{}
+}
+
 func CurrentTimeStampMS() int64 {
 	return time.Now().UnixNano() / time.Millisecond.Nanoseconds()
 }

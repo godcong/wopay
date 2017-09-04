@@ -2,20 +2,26 @@
 
 
 [[projects]]
+  name = "github.com/pelletier/go-buffruneio"
+  packages = ["."]
+  revision = "c37440a7cf42ac63b919c752ca73a85067e05992"
+  version = "v0.2.0"
+
+[[projects]]
+  name = "github.com/pelletier/go-toml"
+  packages = ["."]
+  revision = "5ccdfb18c776b740aecaf085c4d9a2779199c279"
+  version = "v1.0.0"
+
+[[projects]]
   name = "github.com/satori/go.uuid"
   packages = ["."]
   revision = "879c5887cd475cd7864858769793b2ceb0d44feb"
   version = "v1.1.0"
 
-[[projects]]
-  branch = "master"
-  name = "golang.org/x/crypto"
-  packages = ["pkcs12","pkcs12/internal/rc2"]
-  revision = "eb71ad9bd329b5ac0fd0148dd99bd62e8be8e035"
-
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "13aa154bea883036865e4f5cab7b182787ff70928e948b1c4079b04c50ec95d8"
+  inputs-digest = "46be38707fb236a820becb92f9dc9fbd69a4b3227b37a06ac9f84ca755d82697"
   solver-name = "gps-cdcl"
   solver-version = 1

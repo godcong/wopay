@@ -3,7 +3,7 @@ package wx
 import "log"
 
 type Pay struct {
-	config     PayConfig
+	config     *PayConfig
 	signType   SignType
 	autoReport bool
 	useSanBox  bool
@@ -13,18 +13,32 @@ type Pay struct {
 
 type PayData map[string]string
 
-// UnifiedOrder 统一下单
-func (p *Pay) UnifiedOrder(reqData PayData, to ...int) error {
-	conn := p.config.HttpConnectTimeoutMs
-	read := p.config.HttpReadTimeoutMs
-	if len(to) == 2 {
-		conn = to[0]
-		read = to[1]
+func UnifiedOrder(reqData PayData) (PayData, error) {
+	pay := NewPay(PayConfigImpl())
+	data, err := pay.UnifiedOrder(reqData)
+	if err != nil {
+		return nil, err
 	}
-	return p.unifiedOrderTimeout(reqData, conn, read)
+	return data, nil
 }
 
-func (p *Pay) unifiedOrderTimeout(reqData PayData, connect int, read int) error {
+func NewPay(config *PayConfig) *Pay {
+	return &Pay{
+		config: config,
+	}
+}
+
+// UnifiedOrder 统一下单
+func (p *Pay) UnifiedOrderTimeout(reqData PayData, connectTimeoutMs, readTimeoutMs int) (PayData, error) {
+	return p.unifiedOrderTimeout(reqData, connectTimeoutMs, readTimeoutMs)
+}
+
+// UnifiedOrder 统一下单
+func (p *Pay) UnifiedOrder(reqData PayData) (PayData, error) {
+	return p.unifiedOrderTimeout(reqData, p.config.ConnectTimeoutMs, p.config.ReadTimeoutMs)
+}
+
+func (p *Pay) unifiedOrderTimeout(reqData PayData, connect int, read int) (PayData, error) {
 	url := DOMAIN_API + UNIFIEDORDER_URL_SUFFIX
 	if p.useSanBox {
 		url = DOMAIN_API + SANDBOX_URL_SUFFIX + UNIFIEDORDER_URL_SUFFIX
@@ -35,22 +49,23 @@ func (p *Pay) unifiedOrderTimeout(reqData PayData, connect int, read int) error 
 	}
 	m, err := p.FillRequestData(reqData)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	resp, err := p.RequestWithoutCert(url, m)
 	log.Println(resp)
-	return err
+
+	return xmlToMap(resp), err
 }
 
 func (p *Pay) RequestWithoutCert(url string, reqData PayData) (string, error) {
-	msgUUID := reqData.Get("nonce_str")
+	//msgUUID := reqData.Get("nonce_str")
 	reqBody, err := MapToXml(reqData)
 	if err != nil {
 		return "", err
 	}
-
-	resp, err := p.payRequest.RequestWithoutCert(url, msgUUID, reqBody, p.config.ConnectTimeoutMs, p.config.ReadTimeoutMs, p.autoReport)
-
+	log.Println(reqBody)
+	//resp, err := p.payRequest.RequestWithoutCert(url, msgUUID, reqBody, p.config.ConnectTimeoutMs, p.config.ReadTimeoutMs, p.autoReport)
+	resp := ""
 	return resp, err
 }
 
