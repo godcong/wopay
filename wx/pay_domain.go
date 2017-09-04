@@ -13,7 +13,7 @@ var (
 
 type PayDomain interface {
 	Report(string, int64, error)
-	GetDomain() DomainInfo
+	GetDomainInfo() *DomainInfo
 }
 
 type DomainInfo struct {
@@ -22,8 +22,8 @@ type DomainInfo struct {
 
 }
 
-func NewDomainInfo(domain string, primary bool) DomainInfo {
-	return DomainInfo{
+func NewDomainInfo(domain string, primary bool) *DomainInfo {
+	return &DomainInfo{
 		Domain:        domain,
 		PrimaryDomain: primary,
 	}
@@ -144,9 +144,12 @@ func (domain *payDomainSimple) Report(d string, elapsed int64, err error) {
 	}
 
 }
-func (domain *payDomainSimple) GetDomain() DomainInfo {
+func (domain *payDomainSimple) GetDomainInfo() *DomainInfo {
 	domain.Lock()
 	defer domain.Unlock()
+	if domain == nil {
+		return nil
+	}
 	primaryDomain, b := domain.domainData[DOMAIN_API]
 	if !b ||
 		primaryDomain.isGood() {

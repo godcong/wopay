@@ -1,6 +1,7 @@
 package wx
 
 import (
+	"log"
 	"strconv"
 	"strings"
 	"sync"
@@ -45,6 +46,26 @@ func PayReportInstance(config PayConfig) *PayReport {
 		payReport = NewPayReport()
 	}
 	return payReport
+}
+
+func (report *PayReport) Report(uuid string, elapsedTimeMillis int64,
+	firstDomain string, primaryDomain bool, firstConnectTimeoutMillis,
+	firstReadTimeoutMillis int, firstHasDnsError, firstHasConnectTimeout,
+	firstHasReadTimeout bool) {
+	currentTimestamp := CurrentTimeStamp()
+	reportInfo := NewReportInfo(uuid,
+		currentTimestamp,
+		elapsedTimeMillis,
+		firstDomain,
+		primaryDomain,
+		firstConnectTimeoutMillis,
+		firstReadTimeoutMillis,
+		firstHasDnsError,
+		firstHasConnectTimeout,
+		firstHasReadTimeout)
+	data := reportInfo.ToLineString(report.config.Key())
+	//log.Println("data:", reportInfo.ToString())
+	log.Println("report {}", data)
 }
 
 func NewReportInfo(

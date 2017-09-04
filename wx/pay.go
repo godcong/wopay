@@ -1,14 +1,12 @@
 package wx
 
-import "log"
-
 type Pay struct {
-	config     *PayConfig
+	config     PayConfig
+	payRequest *PayRequest
 	signType   SignType
 	autoReport bool
 	useSanBox  bool
 	notifyUrl  string
-	payRequest PayRequest
 }
 
 type PayData map[string]string
@@ -22,10 +20,23 @@ func UnifiedOrder(reqData PayData) (PayData, error) {
 	return data, nil
 }
 
-func NewPay(config *PayConfig) *Pay {
-	return &Pay{
-		config: config,
+func NewPay(config PayConfig) *Pay {
+	return newPay(config, "", true, false)
+}
+
+func newPay(config PayConfig, notifyUrl string, autoReport bool, useSandbox bool) *Pay {
+	pay := Pay{
+		config:     config,
+		notifyUrl:  notifyUrl,
+		autoReport: autoReport,
+		useSanBox:  useSandbox,
 	}
+	pay.signType = SIGN_TYPE_HMACSHA256
+	if useSandbox {
+		pay.signType = SIGN_TYPE_MD5
+	}
+	pay.payRequest = NewPayRequest(config)
+	return &pay
 }
 
 // UnifiedOrder 统一下单
@@ -35,13 +46,13 @@ func (p *Pay) UnifiedOrderTimeout(reqData PayData, connectTimeoutMs, readTimeout
 
 // UnifiedOrder 统一下单
 func (p *Pay) UnifiedOrder(reqData PayData) (PayData, error) {
-	return p.unifiedOrderTimeout(reqData, p.config.ConnectTimeoutMs, p.config.ReadTimeoutMs)
+	return p.unifiedOrderTimeout(reqData, p.config.ConnectTimeoutMs(), p.config.ReadTimeoutMs())
 }
 
 func (p *Pay) unifiedOrderTimeout(reqData PayData, connect int, read int) (PayData, error) {
-	url := DOMAIN_API + UNIFIEDORDER_URL_SUFFIX
+	url := UNIFIEDORDER_URL_SUFFIX
 	if p.useSanBox {
-		url = DOMAIN_API + SANDBOX_URL_SUFFIX + UNIFIEDORDER_URL_SUFFIX
+		url = SANDBOX_URL_SUFFIX + UNIFIEDORDER_URL_SUFFIX
 	}
 
 	if p.notifyUrl != "" {
@@ -52,29 +63,28 @@ func (p *Pay) unifiedOrderTimeout(reqData PayData, connect int, read int) (PayDa
 		return nil, err
 	}
 	resp, err := p.RequestWithoutCert(url, m)
-	log.Println(resp)
-
-	return xmlToMap(resp), err
+	if err != nil {
+		return nil, err
+	}
+	return XmlToMap(resp), nil
 }
 
 func (p *Pay) RequestWithoutCert(url string, reqData PayData) (string, error) {
-	//msgUUID := reqData.Get("nonce_str")
+	msgUUID := reqData.Get("nonce_str")
 	reqBody, err := MapToXml(reqData)
 	if err != nil {
 		return "", err
 	}
-	log.Println(reqBody)
-	//resp, err := p.payRequest.RequestWithoutCert(url, msgUUID, reqBody, p.config.ConnectTimeoutMs, p.config.ReadTimeoutMs, p.autoReport)
-	resp := ""
+	resp, err := p.payRequest.RequestWithoutCert(url, msgUUID, reqBody, p.autoReport)
 	return resp, err
 }
 
 func (p *Pay) FillRequestData(reqData PayData) (PayData, error) {
-	reqData.Set("appid", p.config.AppID)
-	reqData.Set("mch_id", p.config.MchID)
+	reqData.Set("appid", p.config.AppID())
+	reqData.Set("mch_id", p.config.MchID())
 	reqData.Set("nonce_str", GenerateUUID())
 	reqData.Set("sign_type", p.signType.ToString())
-	sign, e := GenerateSignature(reqData, p.config.Key, p.signType)
+	sign, e := GenerateSignature(reqData, p.config.Key(), p.signType)
 	if e != nil {
 		return nil, e
 	}

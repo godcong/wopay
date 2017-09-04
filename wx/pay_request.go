@@ -7,14 +7,20 @@ import (
 
 	"bytes"
 
+	"errors"
 	"io/ioutil"
+	"log"
 )
 
 type PayRequest struct {
-	config *PayConfig
+	config PayConfig
 }
 
-func NewPayRequest(config *PayConfig) *PayRequest {
+var (
+	ErrorNilDomain = errors.New("PayConfig.PayDomain().getDomain() is empty or null")
+)
+
+func NewPayRequest(config PayConfig) *PayRequest {
 	return &PayRequest{config: config}
 }
 
@@ -76,7 +82,7 @@ func (request *PayRequest) RequestOnce(domain, urlSuffix, uuid, data string, con
 		return "", err
 	}
 	req.Header.Set("Content-Type", "text/xml")
-	req.Header.Set("User-Agent", "wxpay sdk go v1.0 "+request.config.MchID)
+	req.Header.Set("User-Agent", "wxpay sdk go v1.0 "+request.config.MchID())
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -123,7 +129,7 @@ func requestOnce(request *PayRequest, domain, urlSuffix, uuid, data string, conn
 		}
 	}
 	url := "https://" + domain + urlSuffix
-
+	log.Println(urlSuffix)
 	client := &http.Client{
 		Transport: tr,
 	}
@@ -132,7 +138,7 @@ func requestOnce(request *PayRequest, domain, urlSuffix, uuid, data string, conn
 		return "", err
 	}
 	req.Header.Set("Content-Type", "text/xml")
-	req.Header.Set("User-Agent", "wxpay sdk go v1.0 "+request.config.MchID)
+	req.Header.Set("User-Agent", "wxpay sdk go v1.0 "+request.config.MchID())
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -144,7 +150,7 @@ func requestOnce(request *PayRequest, domain, urlSuffix, uuid, data string, conn
 	return string(body), err
 }
 
-func (request *PayRequest) RequestWithoutCert(url, uuid, body string, connect, read int, useCert, auto bool) (string, error) {
+func (request *PayRequest) RequestWithoutCert(urlSuffix, uuid, data string, autoReport bool) (string, error) {
 	//elapsedTimeMillis := int64(0)
 	//startTimestampMs := CurrentTimeStampMS()
 	//firstHasDnsErr, firstHasConnectTimeout, firstHasReadTimeout := false, false, false
@@ -156,17 +162,44 @@ func (request *PayRequest) RequestWithoutCert(url, uuid, body string, connect, r
 	//	request.config.PayDomain().Report(domainInfo.Domain, elapsedTimeMillis, nil)
 	//
 	//}
-
-	return "", nil
+	return request.request(urlSuffix, uuid, data, request.config.ConnectTimeoutMs(), request.config.ReadTimeoutMs(), false, autoReport)
 }
 
-func (request *PayRequest) request(urlSuffix, uuid, data string, connectTimeoutMs, readTimeoutMs int, useCert, autoReport bool) (string, error) {
-	//elapsedTimeMillis := 0
+func (request *PayRequest) RequestWithoutCertTimeout(urlSuffix, uuid, data string, connectTimeoutMs, readTimeoutMs int, autoReport bool) (string, error) {
+	//elapsedTimeMillis := int64(0)
 	//startTimestampMs := CurrentTimeStampMS()
 	//firstHasDnsErr, firstHasConnectTimeout, firstHasReadTimeout := false, false, false
 	//domainInfo := request.config.PayDomain().GetDomain()
-	////
-	//result, err := requestOnce(request, domainInfo.Domain, urlSuffix, uuid, data, connectTimeoutMs, readTimeoutMs, useCert)
 	//
-	return "", nil
+	//result, err := request.requestOnce(domainInfo.Domain, url, uuid, body, connect, read)
+	//if err == nil {
+	//	elapsedTimeMillis = CurrentTimeStampMS() - startTimestampMs
+	//	request.config.PayDomain().Report(domainInfo.Domain, elapsedTimeMillis, nil)
+	//
+	//}
+	return request.request(urlSuffix, uuid, data, connectTimeoutMs, readTimeoutMs, false, autoReport)
+}
+
+func (request *PayRequest) request(urlSuffix, uuid, data string, connectTimeoutMs, readTimeoutMs int, useCert, autoReport bool) (string, error) {
+	startTimestampMs := CurrentTimeStampMS()
+	firstHasDnsErr, firstHasConnectTimeout, firstHasReadTimeout := false, false, false
+	domainInfo := request.config.PayDomainInstance().GetDomainInfo()
+	if domainInfo == nil {
+		return "", ErrorNilDomain
+	}
+	result, err := requestOnce(request, domainInfo.Domain, urlSuffix, uuid, data, connectTimeoutMs, readTimeoutMs, useCert)
+	elapsedTimeMillis := CurrentTimeStampMS() - startTimestampMs
+	request.config.PayDomainInstance().Report(domainInfo.Domain, elapsedTimeMillis, nil)
+
+	PayReportInstance(request.config).Report(uuid,
+		elapsedTimeMillis,
+		domainInfo.Domain,
+		domainInfo.PrimaryDomain,
+		connectTimeoutMs,
+		readTimeoutMs,
+		firstHasDnsErr,
+		firstHasConnectTimeout,
+		firstHasReadTimeout)
+
+	return result, err
 }
