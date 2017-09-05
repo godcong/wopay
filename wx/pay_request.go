@@ -20,6 +20,7 @@ type PayRequest struct {
 var (
 	ErrorNilDomain       = errors.New("PayConfig.PayDomain().getDomain() is empty or null")
 	ErrorLoadX509KeyPair = errors.New("LoadX509KeyPair() is empty to load")
+	ErrorReadRootCAFile  = errors.New("read rootca.pem file error")
 )
 
 func NewPayRequest(config PayConfig) *PayRequest {
@@ -107,7 +108,7 @@ func (request *PayRequest) requestOnce(domain, urlSuffix, uuid, data string, con
 
 		caCert, err := ioutil.ReadFile("./cert/rootca.pem")
 		if err != nil {
-			return "", ErrorLoadX509KeyPair
+			return "", ErrorReadRootCAFile
 		}
 		caCertPool := x509.NewCertPool()
 		caCertPool.AppendCertsFromPEM(caCert)

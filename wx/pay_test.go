@@ -2,7 +2,9 @@ package wx
 
 import (
 	"log"
+	"strconv"
 	"testing"
+	"time"
 )
 
 var out_trade_no = "201613091059590000003433-asd002"
@@ -13,6 +15,7 @@ var data PayData = map[string]string{
 	"aecond": "3",
 	"becond": "4",
 }
+var long_url = "weixin://wxpay/bizpayurl?pr=etxB4DY"
 
 func TestPayData_Get(t *testing.T) {
 	log.Println(data.Get("first"))
@@ -77,4 +80,22 @@ func TestRefund(t *testing.T) {
 	data.Set("op_user_id", PayConfigInstance().MchID())
 	rdata, err := Refund(data)
 	log.Println(rdata, err)
+}
+
+func TestShortUrl(t *testing.T) {
+	data := make(PayData)
+	data.Set("long_url", long_url)
+	log.Println(ShortUrl(data))
+}
+
+func TestUnifiedOrderSpeed(t *testing.T) {
+	for i := 0; i < 100; i++ {
+		sta := CurrentTimeStampNS()
+		out_trade_no = out_trade_no + strconv.FormatInt(int64(i), 10)
+		TestUnifiedOrder(t)
+		end := CurrentTimeStampNS()
+		log.Println(end - sta)
+		time.Sleep(1000)
+	}
+
 }

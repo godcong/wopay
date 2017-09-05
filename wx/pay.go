@@ -48,6 +48,15 @@ func ReverseOrder(data PayData) (PayData, error) {
 	return data, nil
 }
 
+func QueryRefund(data PayData) (PayData, error) {
+	pay := NewPay(PayConfigInstance())
+	data, err := pay.QueryRefund(data)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
 func Refund(data PayData) (PayData, error) {
 	pay := NewPay(PayConfigInstance())
 	data, err := pay.Refund(data)
@@ -56,6 +65,25 @@ func Refund(data PayData) (PayData, error) {
 	}
 	return data, nil
 }
+
+func ShortUrl(data PayData) (PayData, error) {
+	pay := NewPay(PayConfigInstance())
+	data, err := pay.ShortUrl(data)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func DownloadBill(data PayData) (PayData, error) {
+	pay := NewPay(PayConfigInstance())
+	data, err := pay.ShortUrl(data)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
 func NewPay(config PayConfig) *Pay {
 	return newPay(config, "", true, false)
 }
@@ -189,6 +217,31 @@ func (pay *Pay) refundTimeout(data PayData, connectTimeoutMs int, readTimeoutMs 
 	}
 
 	return XmlToMap(resp), nil
+}
+
+func (pay *Pay) ShortUrl(data PayData) (PayData, error) {
+	return pay.shortUrl(data, pay.config.ConnectTimeoutMs(), pay.config.ReadTimeoutMs())
+}
+
+func (pay *Pay) ShortUrlTimeout(data PayData, connectTimeoutMs int, readTimeoutMs int) (PayData, error) {
+	return pay.shortUrl(data, connectTimeoutMs, readTimeoutMs)
+}
+func (pay *Pay) shortUrl(data PayData, connectTimeoutMs int, readTimeoutMs int) (PayData, error) {
+	url := pay.UseSandBox(SHORTURL_URL_SUFFIX)
+	m, err := pay.FillRequestData(data)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := pay.RequestWithCert(url, m)
+	if err != nil {
+		return nil, err
+	}
+	return XmlToMap(resp), nil
+}
+
+func (pay *Pay) QueryRefund(data PayData) (PayData, error) {
+	//TODO
+	return nil, nil
 }
 
 func (pay *Pay) RequestWithoutCert(url string, data PayData) (string, error) {

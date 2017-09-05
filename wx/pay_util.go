@@ -36,6 +36,10 @@ type CDATA struct {
 	Value string `xml:",cdata"`
 }
 
+func GenerateNonceStr() string {
+	return GenerateUUID()
+}
+
 func GenerateUUID() string {
 	s := uuid.NewV1().String()
 	s = strings.Replace(s, "-", "", -1)
@@ -105,6 +109,17 @@ func MakeSignHMACSHA256(data, key string) string {
 	m := hmac.New(sha256.New, []byte(key))
 	m.Write([]byte(data))
 	return strings.ToUpper(fmt.Sprintf("%x", m.Sum(nil)))
+}
+
+func IsSignatureValid(xml, key string) bool {
+	data := XmlToMap(xml)
+
+	if !data.IsExist(FIELD_SIGN) {
+		return false
+	}
+	sign1 := data.Get(FIELD_SIGN)
+	sign2, _ := GenerateSignature(data, key, SIGN_TYPE_MD5)
+	return sign1 == sign2
 }
 
 func MapToXml(reqData PayData) (string, error) {
@@ -194,27 +209,13 @@ func CurrentTimeStamp() int64 {
 	return time.Now().Unix()
 }
 
-func GetSignKey() string {
-	return ""
-	//nonceStr := GenerateUUID()
-	//
-	//data := PayData{}
-	//
-	//data.Set("mch_id", PayConfigInstance().MchID())
-	//
-	//data.Set("nonce_str", nonceStr)
-	//
-	//sign := MakeSignMD5(MapToString(data))
-	////sign, _ := GenerateSignature(data, PayConfigInstance().Key(), SIGN_TYPE_MD5)
-	//data.Set("sign", sign)
-	//sd, _ := MapToXml(data)
-	//
-	//url := "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
-	//resp, err := http.Post(url, "", strings.NewReader(sd))
-	//if err != nil {
-	//	return ""
-	//}
-	//defer resp.Body.Close()
-	//b, _ := ioutil.ReadAll(resp.Body)
-	//return string(b)
+func GetSandboxSignKey() (string, error) {
+	config := PayConfigInstance()
+	data := make(PayData)
+	data.Set("mch_id", config.MchID())
+	data.Set("nonce_str", GenerateNonceStr())
+	sign, _ := GenerateSignature(data, config.Key(), SIGN_TYPE_MD5)
+	data.Set("sign", sign)
+	pay := NewPay(config)
+	return pay.RequestWithoutCert(SANDBOX_SIGNKEY_URL_SUFFIX, data)
 }
