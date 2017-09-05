@@ -1,9 +1,10 @@
 package wx
 
-type PayConfigInstance struct {
-	appID              string
-	mchID              string
-	key                string
+import (
+	"io/ioutil"
+)
+
+type PayConfigImpl struct {
 	connectTimeoutMs   int
 	readTimeoutMs      int
 	autoReport         bool
@@ -31,10 +32,10 @@ type PayConfig interface {
 var config PayConfig
 
 func init() {
-	PayConfigImpl()
+	PayConfigInstance()
 }
 
-func PayConfigImpl() PayConfig {
+func PayConfigInstance() PayConfig {
 	if config == nil {
 		config = NewPayConfig()
 	}
@@ -42,7 +43,7 @@ func PayConfigImpl() PayConfig {
 }
 
 func NewPayConfig() PayConfig {
-	return &PayConfigInstance{
+	return &PayConfigImpl{
 		connectTimeoutMs:   6000,
 		readTimeoutMs:      8000,
 		autoReport:         true,
@@ -52,37 +53,37 @@ func NewPayConfig() PayConfig {
 	}
 }
 
-func (instance *PayConfigInstance) AppID() string {
-	return "wx426b3015555a46be"
+func (impl *PayConfigImpl) AppID() string {
+	return "wxa8550ae44b713f1e"
 }
-func (instance *PayConfigInstance) MchID() string {
-	return "1225312702"
+func (impl *PayConfigImpl) MchID() string {
+	return "1300910101"
 }
-func (instance *PayConfigInstance) Key() string {
-	return "e10adc3949ba59abbe56e057f20f883e"
+func (impl *PayConfigImpl) Key() string {
+	return "MvIJ6ZlAIcrgY7OGI5Z9PIU3RcVPfKZs"
 }
-func (instance *PayConfigInstance) Cert() []byte {
-	//TODO
-	return []byte("")
+func (impl *PayConfigImpl) Cert() []byte {
+	cert, _ := ioutil.ReadFile(`D:\Godcong\Workspace\g7n3\src\github.com\godcong\wopay\wx\cert\apiclient_cert.p12`)
+	return cert
 }
-func (instance *PayConfigInstance) ConnectTimeoutMs() int {
-	return instance.connectTimeoutMs
+func (impl *PayConfigImpl) ConnectTimeoutMs() int {
+	return impl.connectTimeoutMs
 }
-func (instance *PayConfigInstance) ReadTimeoutMs() int {
-	return instance.readTimeoutMs
+func (impl *PayConfigImpl) ReadTimeoutMs() int {
+	return impl.readTimeoutMs
 }
-func (instance *PayConfigInstance) PayDomainInstance() PayDomain {
-	return instance.payDomain
+func (impl *PayConfigImpl) PayDomainInstance() PayDomain {
+	return PayDomainSimpleInstance()
 }
-func (instance *PayConfigInstance) AutoReport() bool {
-	return instance.autoReport
+func (impl *PayConfigImpl) AutoReport() bool {
+	return impl.autoReport
 }
-func (instance *PayConfigInstance) ReportWorkNum() int {
-	return instance.reportWorkerNum
+func (impl *PayConfigImpl) ReportWorkNum() int {
+	return impl.reportWorkerNum
 }
-func (instance *PayConfigInstance) ReportQueueMaxSize() int {
-	return instance.reportQueueMaxSize
+func (impl *PayConfigImpl) ReportQueueMaxSize() int {
+	return impl.reportQueueMaxSize
 }
-func (instance *PayConfigInstance) ReportBatchSize() int {
-	return instance.reportBatchSize
+func (impl *PayConfigImpl) ReportBatchSize() int {
+	return impl.reportBatchSize
 }

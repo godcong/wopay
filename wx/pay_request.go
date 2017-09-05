@@ -7,6 +7,7 @@ import (
 
 	"bytes"
 
+	"crypto/x509"
 	"errors"
 	"io/ioutil"
 	"log"
@@ -17,7 +18,8 @@ type PayRequest struct {
 }
 
 var (
-	ErrorNilDomain = errors.New("PayConfig.PayDomain().getDomain() is empty or null")
+	ErrorNilDomain       = errors.New("PayConfig.PayDomain().getDomain() is empty or null")
+	ErrorLoadX509KeyPair = errors.New("LoadX509KeyPair() is empty to load")
 )
 
 func NewPayRequest(config PayConfig) *PayRequest {
@@ -37,7 +39,7 @@ func NewPayRequest(config PayConfig) *PayRequest {
  * @throws Exception
  */
 func (request *PayRequest) RequestOnce(domain, urlSuffix, uuid, data string, connectTimeoutMs, readTimeoutMs int, useCert bool) (string, error) {
-	return requestOnce(request, domain, urlSuffix, uuid, data, connectTimeoutMs, readTimeoutMs, useCert)
+	return request.requestOnce(domain, urlSuffix, uuid, data, connectTimeoutMs, readTimeoutMs, useCert)
 
 	var tr *http.Transport
 	if useCert {
@@ -94,16 +96,24 @@ func (request *PayRequest) RequestOnce(domain, urlSuffix, uuid, data string, con
 	return string(body), err
 }
 
-func requestOnce(request *PayRequest, domain, urlSuffix, uuid, data string, connectTimeoutMs, readTimeoutMs int, useCert bool) (string, error) {
+func (request *PayRequest) requestOnce(domain, urlSuffix, uuid, data string, connectTimeoutMs, readTimeoutMs int, useCert bool) (string, error) {
 	var tr *http.Transport
+
 	if useCert {
-		//key, cert, err := pkcs12.Decode(request.config.cert, request.config.MchID)
-		//cert, err := tls.LoadX509KeyPair(SSLCERT_PATH, SSLKEY_PATH)
-		//if err != nil {
-		//	return "", err
-		//}
+		cert, err := tls.LoadX509KeyPair(SSLCERT_PATH, SSLKEY_PATH)
+		if err != nil {
+			return "", ErrorLoadX509KeyPair
+		}
+
+		caCert, err := ioutil.ReadFile("./cert/rootca.pem")
+		if err != nil {
+			return "", ErrorLoadX509KeyPair
+		}
+		caCertPool := x509.NewCertPool()
+		caCertPool.AppendCertsFromPEM(caCert)
 		tlsConfig := &tls.Config{
-			//Certificates:       []tls.Certificate(cert),
+			Certificates:       []tls.Certificate{cert},
+			RootCAs:            caCertPool,
 			InsecureSkipVerify: false,
 		}
 		tlsConfig.BuildNameToCertificate()
@@ -111,17 +121,6 @@ func requestOnce(request *PayRequest, domain, urlSuffix, uuid, data string, conn
 			TLSClientConfig: tlsConfig,
 		}
 	} else {
-		//c := &http.Client{
-		//	Transport: &http.Transport{
-		//Dial: (&net.Dialer{
-		//Timeout:   30 * time.Second,
-		//KeepAlive: 30 * time.Second,
-		//}).Dial,
-		//TLSHandshakeTimeout:   10 * time.Second,
-		//ResponseHeaderTimeout: 10 * time.Second,
-		//ExpectContinueTimeout: 1 * time.Second,
-		//},
-		//}
 		tr = &http.Transport{
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: true,
@@ -129,10 +128,11 @@ func requestOnce(request *PayRequest, domain, urlSuffix, uuid, data string, conn
 		}
 	}
 	url := "https://" + domain + urlSuffix
-	log.Println(urlSuffix)
+
 	client := &http.Client{
 		Transport: tr,
 	}
+	log.Println(data)
 	req, err := http.NewRequest("POST", url, bytes.NewBufferString(data))
 	if err != nil {
 		return "", err
@@ -148,35 +148,21 @@ func requestOnce(request *PayRequest, domain, urlSuffix, uuid, data string, conn
 
 	body, err := ioutil.ReadAll(resp.Body)
 	return string(body), err
+}
+
+func (request *PayRequest) RequestWithCert(urlSuffix, uuid, data string, autoReport bool) (string, error) {
+	return request.request(urlSuffix, uuid, data, request.config.ConnectTimeoutMs(), request.config.ReadTimeoutMs(), true, autoReport)
+}
+
+func (request *PayRequest) RequestWithCertTimeout(urlSuffix, uuid, data string, connectTimeoutMs, readTimeoutMs int, autoReport bool) (string, error) {
+	return request.request(urlSuffix, uuid, data, connectTimeoutMs, readTimeoutMs, true, autoReport)
 }
 
 func (request *PayRequest) RequestWithoutCert(urlSuffix, uuid, data string, autoReport bool) (string, error) {
-	//elapsedTimeMillis := int64(0)
-	//startTimestampMs := CurrentTimeStampMS()
-	//firstHasDnsErr, firstHasConnectTimeout, firstHasReadTimeout := false, false, false
-	//domainInfo := request.config.PayDomain().GetDomain()
-	//
-	//result, err := request.requestOnce(domainInfo.Domain, url, uuid, body, connect, read)
-	//if err == nil {
-	//	elapsedTimeMillis = CurrentTimeStampMS() - startTimestampMs
-	//	request.config.PayDomain().Report(domainInfo.Domain, elapsedTimeMillis, nil)
-	//
-	//}
 	return request.request(urlSuffix, uuid, data, request.config.ConnectTimeoutMs(), request.config.ReadTimeoutMs(), false, autoReport)
 }
 
 func (request *PayRequest) RequestWithoutCertTimeout(urlSuffix, uuid, data string, connectTimeoutMs, readTimeoutMs int, autoReport bool) (string, error) {
-	//elapsedTimeMillis := int64(0)
-	//startTimestampMs := CurrentTimeStampMS()
-	//firstHasDnsErr, firstHasConnectTimeout, firstHasReadTimeout := false, false, false
-	//domainInfo := request.config.PayDomain().GetDomain()
-	//
-	//result, err := request.requestOnce(domainInfo.Domain, url, uuid, body, connect, read)
-	//if err == nil {
-	//	elapsedTimeMillis = CurrentTimeStampMS() - startTimestampMs
-	//	request.config.PayDomain().Report(domainInfo.Domain, elapsedTimeMillis, nil)
-	//
-	//}
 	return request.request(urlSuffix, uuid, data, connectTimeoutMs, readTimeoutMs, false, autoReport)
 }
 
@@ -187,7 +173,7 @@ func (request *PayRequest) request(urlSuffix, uuid, data string, connectTimeoutM
 	if domainInfo == nil {
 		return "", ErrorNilDomain
 	}
-	result, err := requestOnce(request, domainInfo.Domain, urlSuffix, uuid, data, connectTimeoutMs, readTimeoutMs, useCert)
+	result, err := request.requestOnce(domainInfo.Domain, urlSuffix, uuid, data, connectTimeoutMs, readTimeoutMs, useCert)
 	elapsedTimeMillis := CurrentTimeStampMS() - startTimestampMs
 	request.config.PayDomainInstance().Report(domainInfo.Domain, elapsedTimeMillis, nil)
 

@@ -19,9 +19,16 @@
   revision = "879c5887cd475cd7864858769793b2ceb0d44feb"
   version = "v1.1.0"
 
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/crypto"
+  packages = ["pkcs12","pkcs12/internal/rc2"]
+  revision = "81e90905daefcd6fd217b62423c0908922eadb30"
+  source = "github.com/golang/crypto"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "46be38707fb236a820becb92f9dc9fbd69a4b3227b37a06ac9f84ca755d82697"
+  inputs-digest = "fd18a88455fdcdbda81aa906199519f6b16f956260390d7cd4efd40368dd6b5c"
   solver-name = "gps-cdcl"
   solver-version = 1

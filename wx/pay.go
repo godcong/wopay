@@ -11,15 +11,51 @@ type Pay struct {
 
 type PayData map[string]string
 
-func UnifiedOrder(reqData PayData) (PayData, error) {
-	pay := NewPay(PayConfigImpl())
-	data, err := pay.UnifiedOrder(reqData)
+func UnifiedOrder(data PayData) (PayData, error) {
+	pay := NewPay(PayConfigInstance())
+	data, err := pay.UnifiedOrder(data)
 	if err != nil {
 		return nil, err
 	}
 	return data, nil
 }
 
+func CloseOrder(data PayData) (PayData, error) {
+	pay := NewPay(PayConfigInstance())
+	data, err := pay.CloseOrder(data)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func QueryOrder(data PayData) (PayData, error) {
+	pay := NewPay(PayConfigInstance())
+	data, err := pay.QueryOrder(data)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+//ReverseOrder is deleted
+func ReverseOrder(data PayData) (PayData, error) {
+	pay := NewPay(PayConfigInstance())
+	data, err := pay.ReverseOrder(data)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func Refund(data PayData) (PayData, error) {
+	pay := NewPay(PayConfigInstance())
+	data, err := pay.Refund(data)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
 func NewPay(config PayConfig) *Pay {
 	return newPay(config, "", true, false)
 }
@@ -39,57 +75,153 @@ func newPay(config PayConfig, notifyUrl string, autoReport bool, useSandbox bool
 	return &pay
 }
 
-// UnifiedOrder 统一下单
-func (p *Pay) UnifiedOrderTimeout(reqData PayData, connectTimeoutMs, readTimeoutMs int) (PayData, error) {
-	return p.unifiedOrderTimeout(reqData, connectTimeoutMs, readTimeoutMs)
+func (pay *Pay) UseSandBox(url string) string {
+	if pay.useSanBox {
+		return SANDBOX_URL_SUFFIX + url
+	}
+	return url
 }
 
 // UnifiedOrder 统一下单
-func (p *Pay) UnifiedOrder(reqData PayData) (PayData, error) {
-	return p.unifiedOrderTimeout(reqData, p.config.ConnectTimeoutMs(), p.config.ReadTimeoutMs())
+func (pay *Pay) UnifiedOrderTimeout(data PayData, connectTimeoutMs, readTimeoutMs int) (PayData, error) {
+	return pay.unifiedOrderTimeout(data, connectTimeoutMs, readTimeoutMs)
 }
 
-func (p *Pay) unifiedOrderTimeout(reqData PayData, connect int, read int) (PayData, error) {
-	url := UNIFIEDORDER_URL_SUFFIX
-	if p.useSanBox {
-		url = SANDBOX_URL_SUFFIX + UNIFIEDORDER_URL_SUFFIX
-	}
+// UnifiedOrder 统一下单
+func (pay *Pay) UnifiedOrder(data PayData) (PayData, error) {
+	return pay.unifiedOrderTimeout(data, pay.config.ConnectTimeoutMs(), pay.config.ReadTimeoutMs())
+}
 
-	if p.notifyUrl != "" {
-		reqData.Set("notify_url", p.notifyUrl)
+func (pay *Pay) unifiedOrderTimeout(data PayData, connect int, read int) (PayData, error) {
+	url := pay.UseSandBox(UNIFIEDORDER_URL_SUFFIX)
+
+	if pay.notifyUrl != "" {
+		data.Set("notify_url", pay.notifyUrl)
 	}
-	m, err := p.FillRequestData(reqData)
+	m, err := pay.FillRequestData(data)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := p.RequestWithoutCert(url, m)
+	resp, err := pay.RequestWithoutCert(url, m)
 	if err != nil {
 		return nil, err
 	}
 	return XmlToMap(resp), nil
 }
 
-func (p *Pay) RequestWithoutCert(url string, reqData PayData) (string, error) {
-	msgUUID := reqData.Get("nonce_str")
-	reqBody, err := MapToXml(reqData)
+func (pay *Pay) CloseOrder(data PayData) (PayData, error) {
+	return pay.closeOrderTimeout(data, pay.config.ConnectTimeoutMs(), pay.config.ReadTimeoutMs())
+}
+
+func (pay *Pay) CloseOrderTimeout(data PayData, connectTimeoutMs, readTimeoutMs int) (PayData, error) {
+	return pay.closeOrderTimeout(data, connectTimeoutMs, readTimeoutMs)
+}
+
+func (pay *Pay) closeOrderTimeout(data PayData, connectTimeoutMs, readTimeoutMs int) (PayData, error) {
+	url := pay.UseSandBox(CLOSEORDER_URL_SUFFIX)
+	m, err := pay.FillRequestData(data)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := pay.RequestWithoutCert(url, m)
+	if err != nil {
+		return nil, err
+	}
+	return XmlToMap(resp), nil
+}
+
+func (pay *Pay) QueryOrder(data PayData) (PayData, error) {
+	return pay.queryOrderTimeout(data, pay.config.ConnectTimeoutMs(), pay.config.ReadTimeoutMs())
+}
+
+func (pay *Pay) QueryOrderTimeout(data PayData, connectTimeoutMs int, readTimeoutMs int) (PayData, error) {
+	return pay.queryOrderTimeout(data, connectTimeoutMs, readTimeoutMs)
+}
+func (pay *Pay) queryOrderTimeout(data PayData, connectTimeoutMs int, readTimeoutMs int) (PayData, error) {
+	url := pay.UseSandBox(ORDERQUERY_URL_SUFFIX)
+	m, err := pay.FillRequestData(data)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := pay.RequestWithoutCert(url, m)
+	if err != nil {
+		return nil, err
+	}
+	return XmlToMap(resp), nil
+}
+
+func (pay *Pay) ReverseOrder(data PayData) (PayData, error) {
+	return pay.reverseOrderTimeout(data, pay.config.ConnectTimeoutMs(), pay.config.ReadTimeoutMs())
+}
+
+func (pay *Pay) ReverseOrderTimeout(data PayData, connectTimeoutMs int, readTimeoutMs int) (PayData, error) {
+	return pay.reverseOrderTimeout(data, connectTimeoutMs, readTimeoutMs)
+}
+func (pay *Pay) reverseOrderTimeout(data PayData, connectTimeoutMs int, readTimeoutMs int) (PayData, error) {
+	url := pay.UseSandBox(REVERSE_URL_SUFFIX)
+	m, err := pay.FillRequestData(data)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := pay.RequestWithCert(url, m)
+	if err != nil {
+		return nil, err
+	}
+
+	return XmlToMap(resp), nil
+}
+
+func (pay *Pay) Refund(data PayData) (PayData, error) {
+	return pay.refundTimeout(data, pay.config.ConnectTimeoutMs(), pay.config.ReadTimeoutMs())
+}
+func (pay *Pay) RefundTimeout(data PayData, connectTimeoutMs int, readTimeoutMs int) (PayData, error) {
+	return pay.refundTimeout(data, connectTimeoutMs, readTimeoutMs)
+}
+func (pay *Pay) refundTimeout(data PayData, connectTimeoutMs int, readTimeoutMs int) (PayData, error) {
+	url := pay.UseSandBox(REFUND_URL_SUFFIX)
+	m, err := pay.FillRequestData(data)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := pay.RequestWithCert(url, m)
+	if err != nil {
+		return nil, err
+	}
+
+	return XmlToMap(resp), nil
+}
+
+func (pay *Pay) RequestWithoutCert(url string, data PayData) (string, error) {
+	msgUUID := data.Get("nonce_str")
+	reqBody, err := MapToXml(data)
 	if err != nil {
 		return "", err
 	}
-	resp, err := p.payRequest.RequestWithoutCert(url, msgUUID, reqBody, p.autoReport)
+	resp, err := pay.payRequest.RequestWithoutCert(url, msgUUID, reqBody, pay.autoReport)
 	return resp, err
 }
 
-func (p *Pay) FillRequestData(reqData PayData) (PayData, error) {
-	reqData.Set("appid", p.config.AppID())
-	reqData.Set("mch_id", p.config.MchID())
-	reqData.Set("nonce_str", GenerateUUID())
-	reqData.Set("sign_type", p.signType.ToString())
-	sign, e := GenerateSignature(reqData, p.config.Key(), p.signType)
+func (pay *Pay) RequestWithCert(url string, data PayData) (string, error) {
+	msgUUID := data.Get("nonce_str")
+	reqBody, err := MapToXml(data)
+	if err != nil {
+		return "", err
+	}
+	resp, err := pay.payRequest.RequestWithCert(url, msgUUID, reqBody, pay.autoReport)
+	return resp, err
+}
+
+func (pay *Pay) FillRequestData(data PayData) (PayData, error) {
+	data.Set("appid", pay.config.AppID())
+	data.Set("mch_id", pay.config.MchID())
+	data.Set("nonce_str", GenerateUUID())
+	data.Set("sign_type", pay.signType.ToString())
+	sign, e := GenerateSignature(data, pay.config.Key(), pay.signType)
 	if e != nil {
 		return nil, e
 	}
-	reqData.Set("sign", sign)
-	return reqData, nil
+	data.Set("sign", sign)
+	return data, nil
 }
 
 func (data PayData) Set(key, val string) {

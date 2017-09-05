@@ -7,28 +7,8 @@ import (
 
 	"fmt"
 
-	"github.com/godcong/wopay/wx"
 	"github.com/satori/go.uuid"
 )
-
-var out_trade_no = "201613091059590000003433-asd002"
-
-func TestDoUnifiedOrder(t *testing.T) {
-	data := make(wx.PayData)
-	data.Set("body", "腾讯充值中心-QQ会员充值")
-	data.Set("out_trade_no", out_trade_no)
-	data.Set("device_info", "")
-	data.Set("fee_type", "CNY")
-	data.Set("total_fee", "1")
-	data.Set("spbill_create_ip", "123.12.12.123")
-	data.Set("notify_url", "http://test.letiantian.me/wxpay/notify")
-	data.Set("trade_type", "NATIVE")
-	data.Set("product_id", "12")
-
-	rdata, err := wx.UnifiedOrder(data)
-	log.Println(rdata, err)
-
-}
 
 func BenchmarkLoadConfig(b *testing.B) {
 

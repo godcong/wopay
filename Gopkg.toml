@@ -12,9 +12,9 @@
 #   version = "1.0.0"
 #
  [[constraint]]
-   name = "golang.org/x/crypto/pcks"
+   name = "golang.org/x/crypto"
    branch = "master"
-   source = "github.com/golang/crypto/pcks"
+   source = "github.com/golang/crypto"
 #
 # [[override]]
 #  name = "github.com/x/y"

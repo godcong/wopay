@@ -42,10 +42,10 @@ func (info *DomainInfo) String() string {
 var holder PayDomain
 
 func init() {
-	holder = NewPayDomainSimple()
+	holder = PayDomainSimpleInstance()
 }
 
-type payDomainSimple struct {
+type payDomainSimpleImpl struct {
 	sync.Mutex
 	domainData map[string]*DomainStatics
 	domainTime int64
@@ -90,31 +90,20 @@ func (s *DomainStatics) badCount() int {
 	return s.connectTimeoutCount + s.dnsErrorCount*5 + s.otherErrorCount/4
 }
 
-//DomainStatics {
-//final String domain;
-//int succCount = 0;
-//int connectTimeoutCount = 0;
-//int dnsErrorCount =0;
-//int otherErrorCount = 0;
-//
-//DomainStatics(String domain) {
-//this.domain = domain;
-//}
-//void resetCount(){
-//succCount = connectTimeoutCount = dnsErrorCount = otherErrorCount = 0;
-//}
-//boolean isGood(){ return connectTimeoutCount <= 2 && dnsErrorCount <= 2; }
-//int badCount(){
-//return connectTimeoutCount + dnsErrorCount * 5 + otherErrorCount / 4;
-//}
+func PayDomainSimpleInstance() PayDomain {
+	if holder == nil {
+		holder = NewPayDomainSimple()
+	}
+	return holder
+}
 
-func NewPayDomainSimple() *payDomainSimple {
-	return &payDomainSimple{
+func NewPayDomainSimple() *payDomainSimpleImpl {
+	return &payDomainSimpleImpl{
 		domainData: make(map[string]*DomainStatics),
 	}
 }
 
-func (domain *payDomainSimple) Report(d string, elapsed int64, err error) {
+func (domain *payDomainSimpleImpl) Report(d string, elapsed int64, err error) {
 	domain.Lock()
 	defer domain.Unlock()
 	info, b := domain.domainData[d]
@@ -144,7 +133,7 @@ func (domain *payDomainSimple) Report(d string, elapsed int64, err error) {
 	}
 
 }
-func (domain *payDomainSimple) GetDomainInfo() *DomainInfo {
+func (domain *payDomainSimpleImpl) GetDomainInfo() *DomainInfo {
 	domain.Lock()
 	defer domain.Unlock()
 	if domain == nil {

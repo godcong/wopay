@@ -62,3 +62,7 @@ func TestXmlToMap(t *testing.T) {
 
 	log.Println(XmlToMap(input))
 }
+
+func TestGetSignKey(t *testing.T) {
+	log.Println(GetSignKey())
+}

@@ -28,6 +28,8 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+const CUSTOM_HEADER = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>`
+
 var ErrorSignType = errors.New("sign type error")
 
 type CDATA struct {
@@ -39,6 +41,27 @@ func GenerateUUID() string {
 	s = strings.Replace(s, "-", "", -1)
 	run := ([]rune)(s)[:32]
 	return string(run)
+}
+
+func MapToString(data PayData) string {
+	var keys sort.StringSlice
+	for k := range data {
+		keys = append(keys, k)
+	}
+	sort.Sort(keys)
+	var sign []string
+
+	for _, k := range keys {
+		if k == FIELD_SIGN {
+			continue
+		}
+		v := strings.TrimSpace(data[k])
+		if len(v) > 0 {
+			sign = append(sign, strings.Join([]string{k, v}, "="))
+		}
+	}
+	log.Println(strings.Join(sign, "&"))
+	return strings.Join(sign, "&")
 }
 
 func GenerateSignature(reqData PayData, key string, signType SignType) (string, error) {
@@ -90,7 +113,7 @@ func MapToXml(reqData PayData) (string, error) {
 
 func mapToXml(reqData PayData, needHeader bool) (string, error) {
 
-	buff := bytes.NewBuffer(nil)
+	buff := bytes.NewBuffer([]byte(CUSTOM_HEADER))
 	if needHeader {
 		buff.Write([]byte(xml.Header))
 	}
@@ -155,6 +178,7 @@ func xmlToMap(contentXml string, hasHeader bool) PayData {
 		}
 
 	}
+
 	return data
 }
 
@@ -168,4 +192,29 @@ func CurrentTimeStampNS() int64 {
 
 func CurrentTimeStamp() int64 {
 	return time.Now().Unix()
+}
+
+func GetSignKey() string {
+	return ""
+	//nonceStr := GenerateUUID()
+	//
+	//data := PayData{}
+	//
+	//data.Set("mch_id", PayConfigInstance().MchID())
+	//
+	//data.Set("nonce_str", nonceStr)
+	//
+	//sign := MakeSignMD5(MapToString(data))
+	////sign, _ := GenerateSignature(data, PayConfigInstance().Key(), SIGN_TYPE_MD5)
+	//data.Set("sign", sign)
+	//sd, _ := MapToXml(data)
+	//
+	//url := "https://api.mch.weixin.qq.com/sandboxnew/pay/getsignkey"
+	//resp, err := http.Post(url, "", strings.NewReader(sd))
+	//if err != nil {
+	//	return ""
+	//}
+	//defer resp.Body.Close()
+	//b, _ := ioutil.ReadAll(resp.Body)
+	//return string(b)
 }

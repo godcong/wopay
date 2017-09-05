@@ -37,13 +37,15 @@ type ReportInfo struct {
 	FirstHasReadTimeout       int    // 第1次请求是否出现连接超时
 }
 
-func NewPayReport() *PayReport {
-	return &PayReport{}
+func newPayReport(config PayConfig) *PayReport {
+	return &PayReport{
+		config: config,
+	}
 }
 
 func PayReportInstance(config PayConfig) *PayReport {
 	if payReport == nil {
-		payReport = NewPayReport()
+		payReport = newPayReport(config)
 	}
 	return payReport
 }
@@ -64,8 +66,7 @@ func (report *PayReport) Report(uuid string, elapsedTimeMillis int64,
 		firstHasConnectTimeout,
 		firstHasReadTimeout)
 	data := reportInfo.ToLineString(report.config.Key())
-	//log.Println("data:", reportInfo.ToString())
-	log.Println("report {}", data)
+	log.Println("report {", data, "}")
 }
 
 func NewReportInfo(
