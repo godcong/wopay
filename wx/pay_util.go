@@ -141,17 +141,17 @@ func mapToXml(reqData PayData, needHeader bool) (string, error) {
 
 	enc := xml.NewEncoder(buff)
 
-	enc.EncodeToken(xml.StartElement{xml.Name{"", "xml"}, nil})
+	enc.EncodeToken(xml.StartElement{Name: xml.Name{Local: "xml"}})
 	for k, v := range reqData {
 		if _, err := strconv.ParseInt(v, 10, 0); err != nil {
 			enc.EncodeElement(
-				CDATA{v}, xml.StartElement{xml.Name{"", k}, nil})
+				CDATA{Value: v}, xml.StartElement{Name: xml.Name{Local: k}})
 		} else {
-			enc.EncodeElement(v, xml.StartElement{xml.Name{"", k}, nil})
+			enc.EncodeElement(v, xml.StartElement{Name: xml.Name{Local: k}})
 		}
 
 	}
-	enc.EncodeToken(xml.EndElement{xml.Name{"", "xml"}})
+	enc.EncodeToken(xml.EndElement{Name: xml.Name{Local: "xml"}})
 	enc.Flush()
 	return buff.String(), nil
 }

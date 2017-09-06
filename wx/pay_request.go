@@ -41,60 +41,6 @@ func NewPayRequest(config PayConfig) *PayRequest {
  */
 func (request *PayRequest) RequestOnce(domain, urlSuffix, uuid, data string, connectTimeoutMs, readTimeoutMs int, useCert bool) (string, error) {
 	return request.requestOnce(domain, urlSuffix, uuid, data, connectTimeoutMs, readTimeoutMs, useCert)
-
-	var tr *http.Transport
-	if useCert {
-		//key, cert, err := pkcs12.Decode(request.config.cert, request.config.MchID)
-		//cert, err := tls.LoadX509KeyPair(SSLCERT_PATH, SSLKEY_PATH)
-		//if err != nil {
-		//	return "", err
-		//}
-		tlsConfig := &tls.Config{
-			//Certificates:       []tls.Certificate(cert),
-			InsecureSkipVerify: false,
-		}
-		tlsConfig.BuildNameToCertificate()
-		tr = &http.Transport{
-			TLSClientConfig: tlsConfig,
-		}
-	} else {
-		//c := &http.Client{
-		//	Transport: &http.Transport{
-		//Dial: (&net.Dialer{
-		//Timeout:   30 * time.Second,
-		//KeepAlive: 30 * time.Second,
-		//}).Dial,
-		//TLSHandshakeTimeout:   10 * time.Second,
-		//ResponseHeaderTimeout: 10 * time.Second,
-		//ExpectContinueTimeout: 1 * time.Second,
-		//},
-		//}
-		tr = &http.Transport{
-			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true,
-			},
-		}
-	}
-	url := "https://" + domain + urlSuffix
-
-	client := &http.Client{
-		Transport: tr,
-	}
-	req, err := http.NewRequest("POST", url, bytes.NewBufferString(data))
-	if err != nil {
-		return "", err
-	}
-	req.Header.Set("Content-Type", "text/xml")
-	req.Header.Set("User-Agent", "wxpay sdk go v1.0 "+request.config.MchID())
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return "", err
-	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	return string(body), err
 }
 
 func (request *PayRequest) requestOnce(domain, urlSuffix, uuid, data string, connectTimeoutMs, readTimeoutMs int, useCert bool) (string, error) {
