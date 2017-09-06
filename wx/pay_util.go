@@ -47,6 +47,7 @@ func GenerateUUID() string {
 	return string(run)
 }
 
+//MapToString
 func MapToString(data PayData) string {
 	var keys sort.StringSlice
 	for k := range data {
@@ -68,6 +69,7 @@ func MapToString(data PayData) string {
 	return strings.Join(sign, "&")
 }
 
+//GenerateSignature make sign from map data
 func GenerateSignature(reqData PayData, key string, signType SignType) (string, error) {
 	var keys sort.StringSlice
 	for k := range reqData {
@@ -98,6 +100,7 @@ func GenerateSignature(reqData PayData, key string, signType SignType) (string, 
 	}
 }
 
+//MakeSignMD5 make sign with md5
 func MakeSignMD5(data string) string {
 	m := md5.New()
 	io.WriteString(m, data)
@@ -105,12 +108,14 @@ func MakeSignMD5(data string) string {
 	return strings.ToUpper(fmt.Sprintf("%x", m.Sum(nil)))
 }
 
+//MakeSignHMACSHA256 make sign with hmac-sha256
 func MakeSignHMACSHA256(data, key string) string {
 	m := hmac.New(sha256.New, []byte(key))
 	m.Write([]byte(data))
 	return strings.ToUpper(fmt.Sprintf("%x", m.Sum(nil)))
 }
 
+//IsSignatureValid check sign
 func IsSignatureValid(xml, key string) bool {
 	data := XmlToMap(xml)
 
@@ -122,6 +127,7 @@ func IsSignatureValid(xml, key string) bool {
 	return sign1 == sign2
 }
 
+// MapToXml Convert MAP to XML
 func MapToXml(reqData PayData) (string, error) {
 	return mapToXml(reqData, false)
 }
@@ -150,6 +156,7 @@ func mapToXml(reqData PayData, needHeader bool) (string, error) {
 	return buff.String(), nil
 }
 
+// XmlToMap Convert XML to MAP
 func XmlToMap(contentXml string) PayData {
 	return xmlToMap(contentXml, false)
 }
@@ -197,19 +204,23 @@ func xmlToMap(contentXml string, hasHeader bool) PayData {
 	return data
 }
 
+//CurrentTimeStampMS get current time with millisecond
 func CurrentTimeStampMS() int64 {
 	return time.Now().UnixNano() / time.Millisecond.Nanoseconds()
 }
 
+//CurrentTimeStampNS get current time with nanoseconds
 func CurrentTimeStampNS() int64 {
 	return time.Now().UnixNano()
 }
 
+//CurrentTimeStamp get current time with unix
 func CurrentTimeStamp() int64 {
 	return time.Now().Unix()
 }
 
-func GetSandboxSignKey() (string, error) {
+//SandboxSignKey get wechat sandbox sign key
+func SandboxSignKey() (string, error) {
 	config := PayConfigInstance()
 	data := make(PayData)
 	data.Set("mch_id", config.MchID())

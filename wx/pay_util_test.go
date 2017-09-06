@@ -64,7 +64,7 @@ func TestXmlToMap(t *testing.T) {
 }
 
 func TestGetSignKey(t *testing.T) {
-	log.Println(GetSandboxSignKey())
+	log.Println(SandboxSignKey())
 }
 
 func TestIsSignatureValid(t *testing.T) {
