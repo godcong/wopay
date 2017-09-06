@@ -35,4 +35,3 @@ func BenchmarkLoadConfig(b *testing.B) {
 	log.Println("end", end-mid)
 
 }
-
