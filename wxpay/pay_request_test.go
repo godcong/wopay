@@ -1,4 +1,4 @@
-package wx
+package wxpay
 
 import (
 	"io/ioutil"

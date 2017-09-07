@@ -1,4 +1,4 @@
-package wx
+package wxpay
 
 import (
 	"crypto/tls"
@@ -11,6 +11,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"log"
+	"time"
 )
 
 type PayRequest struct {
@@ -65,19 +66,34 @@ func (request *PayRequest) requestOnce(domain, urlSuffix, uuid, data string, con
 		}
 		tlsConfig.BuildNameToCertificate()
 		tr = &http.Transport{
+			//Dial: (&net.Dialer{
+			//	Timeout:   30 * time.Second,
+			//	KeepAlive: 30 * time.Second,
+			//}).Dial,
 			TLSClientConfig: tlsConfig,
+			//TLSHandshakeTimeout:   10 * time.Second,
+			//ResponseHeaderTimeout: 10 * time.Second,
+			//ExpectContinueTimeout: 1 * time.Second,
 		}
 	} else {
 		tr = &http.Transport{
+			//Dial: (&net.Dialer{
+			//	Timeout:   30 * time.Second,
+			//	KeepAlive: 30 * time.Second,
+			//}).Dial,
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: true,
 			},
+			//TLSHandshakeTimeout:   10 * time.Second,
+			//ResponseHeaderTimeout: 10 * time.Second,
+			//ExpectContinueTimeout: 1 * time.Second,
 		}
 	}
 	url := "https://" + domain + urlSuffix
 
 	client := &http.Client{
 		Transport: tr,
+		Timeout:   time.Duration(connectTimeoutMs + readTimeoutMs),
 	}
 	log.Println(data)
 	req, err := http.NewRequest("POST", url, bytes.NewBufferString(data))

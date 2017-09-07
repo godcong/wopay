@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/bradfitz/gomemcache"
+  packages = ["memcache"]
+  revision = "1952afaa557dc08e8e0d89eafab110fb501c1a2b"
+
+[[projects]]
   name = "github.com/pelletier/go-buffruneio"
   packages = ["."]
   revision = "c37440a7cf42ac63b919c752ca73a85067e05992"
@@ -21,14 +27,13 @@
 
 [[projects]]
   branch = "master"
-  name = "golang.org/x/crypto"
-  packages = ["pkcs12","pkcs12/internal/rc2"]
-  revision = "81e90905daefcd6fd217b62423c0908922eadb30"
-  source = "github.com/golang/crypto"
+  name = "github.com/silenceper/wechat"
+  packages = [".","cache","context","js","material","menu","message","oauth","server","util"]
+  revision = "3f720b64c98c33f780cfd252dbd9913f5b5ae1df"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "fd18a88455fdcdbda81aa906199519f6b16f956260390d7cd4efd40368dd6b5c"
+  inputs-digest = "bb2c8e8c362b091db75afdcb3b6b8f939d803606757f51ecfd972367f51fb92d"
   solver-name = "gps-cdcl"
   solver-version = 1

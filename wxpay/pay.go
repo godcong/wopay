@@ -1,4 +1,4 @@
-package wx
+package wxpay
 
 type Pay struct {
 	config     PayConfig

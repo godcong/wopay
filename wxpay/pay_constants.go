@@ -1,4 +1,4 @@
-package wx
+package wxpay
 
 type SignType int
 

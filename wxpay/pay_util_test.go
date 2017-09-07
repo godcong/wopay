@@ -1,4 +1,4 @@
-package wx
+package wxpay
 
 import (
 	"log"
@@ -96,4 +96,9 @@ func TestIsSignatureValid(t *testing.T) {
 	log.Println("+++++++++++++++++")
 	log.Println(data)
 	log.Println(len(data.Get("attach")))
+}
+
+func TestJsonApiParameters(t *testing.T) {
+	output := XmlToMap(input)
+	log.Println(JsonApiParameters(output))
 }

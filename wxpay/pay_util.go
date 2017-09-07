@@ -1,4 +1,4 @@
-package wx
+package wxpay
 
 import (
 	"strings"
@@ -25,12 +25,17 @@ import (
 
 	"strconv"
 
+	"encoding/json"
+
 	uuid "github.com/satori/go.uuid"
 )
 
 const CUSTOM_HEADER = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>`
 
-var ErrorSignType = errors.New("sign type error")
+var (
+	ErrorSignType  = errors.New("sign type error")
+	ErrorParameter = errors.New("parameter error")
+)
 
 type CDATA struct {
 	Value string `xml:",cdata"`
@@ -99,6 +104,19 @@ func GenerateSignature(reqData PayData, key string, signType SignType) (string, 
 		return "", ErrorSignType
 	}
 }
+
+//func ToUrlParams(data PayData) string {
+//	buff := bytes.NewBuffer(nil)
+//	for k, v := range data {
+//		if k != FIELD_SIGN && v != "" {
+//			buff.Write([]byte(strings.Join([]string{k, v}, "=")))
+//			buff.Write([]byte("&"))
+//		}
+//	}
+//	param := buff.Bytes()
+//	return string(param[:len(param)-1])
+//
+//}
 
 //MakeSignMD5 make sign with md5
 func MakeSignMD5(data string) string {
@@ -219,6 +237,10 @@ func CurrentTimeStamp() int64 {
 	return time.Now().Unix()
 }
 
+func CurrentTimeStampString() string {
+	return strconv.FormatInt(CurrentTimeStamp(), 10)
+}
+
 //SandboxSignKey get wechat sandbox sign key
 func SandboxSignKey() (string, error) {
 	config := PayConfigInstance()
@@ -229,4 +251,26 @@ func SandboxSignKey() (string, error) {
 	data.Set("sign", sign)
 	pay := NewPay(config)
 	return pay.RequestWithoutCert(SANDBOX_SIGNKEY_URL_SUFFIX, data)
+}
+
+func JsonApiParameters(data PayData) (string, error) {
+	if !data.IsExist("appid") ||
+		!data.IsExist("prepay_id") ||
+		data.Get("prepay_id") == "" {
+		return "", ErrorParameter
+	}
+
+	pay := make(PayData)
+	pay.Set("appid", data.Get("appid"))
+	pay.Set("timeStamp", CurrentTimeStampString())
+	pay.Set("nonceStr", GenerateNonceStr())
+	pay.Set("package", "prepay_id="+data.Get("prepay_id"))
+	pay.Set("signType", SIGN_TYPE_MD5.ToString())
+	s, e := GenerateSignature(pay, PayConfigInstance().Key(), SIGN_TYPE_MD5)
+	if e != nil {
+		return "", e
+	}
+	pay.Set("paySign", s)
+	b, err := json.Marshal(pay)
+	return string(b), err
 }
