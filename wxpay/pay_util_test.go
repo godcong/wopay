@@ -3,6 +3,8 @@ package wxpay
 import (
 	"log"
 	"testing"
+
+	"github.com/silenceper/wechat/oauth"
 )
 
 type pay_util_test struct {
@@ -101,4 +103,13 @@ func TestIsSignatureValid(t *testing.T) {
 func TestJsonApiParameters(t *testing.T) {
 	output := XmlToMap(input)
 	log.Println(JsonApiParameters(output))
+
+}
+
+func TestEditAddressParameters(t *testing.T) {
+	token := oauth.ResAccessToken{
+		AccessToken: "123456",
+	}
+	s, e := EditAddressParameters("http://g7n3.com", &token)
+	t.Log(s, e)
 }

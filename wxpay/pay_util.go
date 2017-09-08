@@ -27,14 +27,18 @@ import (
 
 	"encoding/json"
 
+	"crypto/sha1"
+
 	uuid "github.com/satori/go.uuid"
+	"github.com/silenceper/wechat/oauth"
 )
 
 const CUSTOM_HEADER = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>`
 
 var (
 	ErrorSignType  = errors.New("sign type error")
-	ErrorParameter = errors.New("parameter error")
+	ErrorParameter = errors.New("JsonApiParameters() check error")
+	ErrorToken     = errors.New("EditAddressParameters() token is nil")
 )
 
 type CDATA struct {
@@ -76,11 +80,7 @@ func MapToString(data PayData) string {
 
 //GenerateSignature make sign from map data
 func GenerateSignature(reqData PayData, key string, signType SignType) (string, error) {
-	var keys sort.StringSlice
-	for k := range reqData {
-		keys = append(keys, k)
-	}
-	sort.Sort(keys)
+	keys := reqData.SortKeys()
 	var sign []string
 
 	for _, k := range keys {
@@ -105,18 +105,22 @@ func GenerateSignature(reqData PayData, key string, signType SignType) (string, 
 	}
 }
 
-//func ToUrlParams(data PayData) string {
-//	buff := bytes.NewBuffer(nil)
-//	for k, v := range data {
-//		if k != FIELD_SIGN && v != "" {
-//			buff.Write([]byte(strings.Join([]string{k, v}, "=")))
-//			buff.Write([]byte("&"))
-//		}
-//	}
-//	param := buff.Bytes()
-//	return string(param[:len(param)-1])
-//
-//}
+func ToUrlParams(data PayData) string {
+	keys := data.SortKeys()
+	var sign []string
+	for _, k := range keys {
+		if k == FIELD_SIGN {
+			continue
+		}
+		v := strings.TrimSpace(data[k])
+		if len(v) > 0 {
+			sign = append(sign, strings.Join([]string{k, v}, "="))
+		}
+	}
+
+	return strings.Join(sign, "&")
+
+}
 
 //MakeSignMD5 make sign with md5
 func MakeSignMD5(data string) string {
@@ -273,4 +277,33 @@ func JsonApiParameters(data PayData) (string, error) {
 	pay.Set("paySign", s)
 	b, err := json.Marshal(pay)
 	return string(b), err
+}
+
+func EditAddressParameters(url string, token *oauth.ResAccessToken) (string, error) {
+	if token == nil {
+		return "", ErrorToken
+	}
+	pay := make(PayData)
+	pay.Set("appid", PayConfigInstance().AppID())
+	pay.Set("url", url)
+	pay.Set("timestamp", CurrentTimeStampString())
+	pay.Set("noncestr", GenerateNonceStr())
+	pay.Set("accesstoken", token.AccessToken)
+	param := ToUrlParams(pay)
+	addrSign := SHA1(param)
+	afterData := PayData{
+		"addrSign":  addrSign,
+		"signType":  "sha1",
+		"scope":     "jsapi_address",
+		"appId":     pay.Get("appid"),
+		"timeStamp": pay.Get("timestamp"),
+		"nonceStr":  pay.Get("noncestr"),
+	}
+	return afterData.ToJson(), nil
+}
+
+func SHA1(s string) string {
+	m := sha1.New()
+	m.Write([]byte(s))
+	return fmt.Sprintf("%x", m.Sum(nil))
 }

@@ -1,5 +1,10 @@
 package wxpay
 
+import (
+	"encoding/json"
+	"sort"
+)
+
 type Pay struct {
 	config     PayConfig
 	payRequest *PayRequest
@@ -11,6 +16,7 @@ type Pay struct {
 
 type PayData map[string]string
 
+//UnifiedOrder
 func UnifiedOrder(data PayData) (PayData, error) {
 	pay := NewPay(PayConfigInstance())
 	data, err := pay.UnifiedOrder(data)
@@ -20,6 +26,7 @@ func UnifiedOrder(data PayData) (PayData, error) {
 	return data, nil
 }
 
+//CloseOrder
 func CloseOrder(data PayData) (PayData, error) {
 	pay := NewPay(PayConfigInstance())
 	data, err := pay.CloseOrder(data)
@@ -29,6 +36,7 @@ func CloseOrder(data PayData) (PayData, error) {
 	return data, nil
 }
 
+//QueryOrder
 func QueryOrder(data PayData) (PayData, error) {
 	pay := NewPay(PayConfigInstance())
 	data, err := pay.QueryOrder(data)
@@ -38,7 +46,7 @@ func QueryOrder(data PayData) (PayData, error) {
 	return data, nil
 }
 
-//ReverseOrder is deleted
+//ReverseOrder
 func ReverseOrder(data PayData) (PayData, error) {
 	pay := NewPay(PayConfigInstance())
 	data, err := pay.ReverseOrder(data)
@@ -48,6 +56,7 @@ func ReverseOrder(data PayData) (PayData, error) {
 	return data, nil
 }
 
+//QueryRefund
 func QueryRefund(data PayData) (PayData, error) {
 	pay := NewPay(PayConfigInstance())
 	data, err := pay.QueryRefund(data)
@@ -57,6 +66,7 @@ func QueryRefund(data PayData) (PayData, error) {
 	return data, nil
 }
 
+//Refund
 func Refund(data PayData) (PayData, error) {
 	pay := NewPay(PayConfigInstance())
 	data, err := pay.Refund(data)
@@ -120,7 +130,7 @@ func (pay *Pay) UnifiedOrder(data PayData) (PayData, error) {
 	return pay.unifiedOrderTimeout(data, pay.config.ConnectTimeoutMs(), pay.config.ReadTimeoutMs())
 }
 
-func (pay *Pay) unifiedOrderTimeout(data PayData, connect int, read int) (PayData, error) {
+func (pay *Pay) unifiedOrderTimeout(data PayData, connectTimeoutMs int, readTimeoutMs int) (PayData, error) {
 	url := pay.UseSandBox(UNIFIEDORDER_URL_SUFFIX)
 
 	if pay.notifyUrl != "" {
@@ -130,7 +140,7 @@ func (pay *Pay) unifiedOrderTimeout(data PayData, connect int, read int) (PayDat
 	if err != nil {
 		return nil, err
 	}
-	resp, err := pay.RequestWithoutCert(url, m)
+	resp, err := pay.RequestWithoutCertTimeout(url, m, connectTimeoutMs, readTimeoutMs)
 	if err != nil {
 		return nil, err
 	}
@@ -151,7 +161,7 @@ func (pay *Pay) closeOrderTimeout(data PayData, connectTimeoutMs, readTimeoutMs 
 	if err != nil {
 		return nil, err
 	}
-	resp, err := pay.RequestWithoutCert(url, m)
+	resp, err := pay.RequestWithoutCertTimeout(url, m, connectTimeoutMs, readTimeoutMs)
 	if err != nil {
 		return nil, err
 	}
@@ -171,7 +181,7 @@ func (pay *Pay) queryOrderTimeout(data PayData, connectTimeoutMs int, readTimeou
 	if err != nil {
 		return nil, err
 	}
-	resp, err := pay.RequestWithoutCert(url, m)
+	resp, err := pay.RequestWithoutCertTimeout(url, m, connectTimeoutMs, readTimeoutMs)
 	if err != nil {
 		return nil, err
 	}
@@ -191,7 +201,7 @@ func (pay *Pay) reverseOrderTimeout(data PayData, connectTimeoutMs int, readTime
 	if err != nil {
 		return nil, err
 	}
-	resp, err := pay.RequestWithCert(url, m)
+	resp, err := pay.RequestWithCertTimeout(url, m, connectTimeoutMs, readTimeoutMs)
 	if err != nil {
 		return nil, err
 	}
@@ -211,7 +221,7 @@ func (pay *Pay) refundTimeout(data PayData, connectTimeoutMs int, readTimeoutMs 
 	if err != nil {
 		return nil, err
 	}
-	resp, err := pay.RequestWithCert(url, m)
+	resp, err := pay.RequestWithCertTimeout(url, m, connectTimeoutMs, readTimeoutMs)
 	if err != nil {
 		return nil, err
 	}
@@ -232,7 +242,7 @@ func (pay *Pay) shortUrl(data PayData, connectTimeoutMs int, readTimeoutMs int) 
 	if err != nil {
 		return nil, err
 	}
-	resp, err := pay.RequestWithCert(url, m)
+	resp, err := pay.RequestWithCertTimeout(url, m, connectTimeoutMs, readTimeoutMs)
 	if err != nil {
 		return nil, err
 	}
@@ -254,6 +264,16 @@ func (pay *Pay) RequestWithoutCert(url string, data PayData) (string, error) {
 	return resp, err
 }
 
+func (pay *Pay) RequestWithoutCertTimeout(url string, data PayData, connectTimeoutMs, readTimeoutMs int) (string, error) {
+	msgUUID := data.Get("nonce_str")
+	reqBody, err := MapToXml(data)
+	if err != nil {
+		return "", err
+	}
+	resp, err := pay.payRequest.RequestWithoutCertTimeout(url, msgUUID, reqBody, connectTimeoutMs, readTimeoutMs, pay.autoReport)
+	return resp, err
+}
+
 func (pay *Pay) RequestWithCert(url string, data PayData) (string, error) {
 	msgUUID := data.Get("nonce_str")
 	reqBody, err := MapToXml(data)
@@ -261,6 +281,16 @@ func (pay *Pay) RequestWithCert(url string, data PayData) (string, error) {
 		return "", err
 	}
 	resp, err := pay.payRequest.RequestWithCert(url, msgUUID, reqBody, pay.autoReport)
+	return resp, err
+}
+
+func (pay *Pay) RequestWithCertTimeout(url string, data PayData, connectTimeoutMs, readTimeoutMs int) (string, error) {
+	msgUUID := data.Get("nonce_str")
+	reqBody, err := MapToXml(data)
+	if err != nil {
+		return "", err
+	}
+	resp, err := pay.payRequest.RequestWithCertTimeout(url, msgUUID, reqBody, connectTimeoutMs, readTimeoutMs, pay.autoReport)
 	return resp, err
 }
 
@@ -288,4 +318,21 @@ func (data PayData) Get(key string) string {
 func (data PayData) IsExist(key string) bool {
 	_, b := data[key]
 	return b
+}
+
+func (data PayData) SortKeys() []string {
+	var keys sort.StringSlice
+	for k := range data {
+		keys = append(keys, k)
+	}
+	sort.Sort(keys)
+	return keys
+}
+
+func (data PayData) ToJson() string {
+	b, e := json.Marshal(&data)
+	if e != nil {
+		return ""
+	}
+	return string(b)
 }
