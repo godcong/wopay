@@ -5,6 +5,8 @@ import (
 
 	"log"
 
+	"errors"
+
 	"github.com/silenceper/wechat"
 	"github.com/silenceper/wechat/oauth"
 )
@@ -64,4 +66,12 @@ func (o *Oauth2) GetOpenid() *oauth.ResAccessToken {
 
 func (o *Oauth2) GetOauth() *oauth.Oauth {
 	return o.wx.GetOauth(o.request, o.response)
+}
+
+func (o *Oauth2) GetUserInfo(token *oauth.ResAccessToken) (result oauth.UserInfo, err error) {
+	if token == nil {
+		return oauth.UserInfo{}, errors.New("GetUserInfo() token nil")
+	}
+	oauth := o.wx.GetOauth(o.request, o.response)
+	return oauth.GetUserInfo(token.AccessToken, token.OpenID)
 }
