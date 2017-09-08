@@ -93,7 +93,7 @@ func (request *PayRequest) requestOnce(domain, urlSuffix, uuid, data string, con
 
 	client := &http.Client{
 		Transport: tr,
-		Timeout:   time.Duration(connectTimeoutMs + readTimeoutMs),
+		Timeout:   time.Duration((connectTimeoutMs + readTimeoutMs) * 1000000),
 	}
 	log.Println(data)
 	req, err := http.NewRequest("POST", url, bytes.NewBufferString(data))
