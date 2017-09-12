@@ -42,8 +42,8 @@ func PayConfigInstance() PayConfig {
 	return config
 }
 
-func SetPayConfig(config1 PayConfig) {
-	config = config1
+func SetPayConfig(conf PayConfig) {
+	config = conf
 }
 
 func NewPayConfig() PayConfig {
