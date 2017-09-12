@@ -42,6 +42,10 @@ func PayConfigInstance() PayConfig {
 	return config
 }
 
+func SetPayConfig(config1 PayConfig) {
+	config = config1
+}
+
 func NewPayConfig() PayConfig {
 	return &PayConfigImpl{
 		connectTimeoutMs:   6000,
