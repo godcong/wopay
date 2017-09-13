@@ -1,33 +1,21 @@
 package wxpay
 
 import (
-	"strings"
-
-	"sort"
-
-	"errors"
-
-	"crypto/md5"
-	"io"
-
-	"crypto/hmac"
-	"crypto/sha256"
-
-	"fmt"
-
-	"encoding/xml"
-
 	"bytes"
-
-	"time"
-
-	"log"
-
-	"strconv"
-
-	"encoding/json"
-
+	"crypto/hmac"
+	"crypto/md5"
 	"crypto/sha1"
+	"crypto/sha256"
+	"encoding/json"
+	"encoding/xml"
+	"errors"
+	"fmt"
+	"io"
+	"log"
+	"sort"
+	"strconv"
+	"strings"
+	"time"
 
 	uuid "github.com/satori/go.uuid"
 	"github.com/silenceper/wechat/oauth"
