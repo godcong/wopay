@@ -68,7 +68,7 @@ func (impl *PayConfigImpl) Key() string {
 	return "MvIJ6ZlAIcrgY7OGI5Z9PIU3RcVPfKZs"
 }
 func (impl *PayConfigImpl) Cert() []byte {
-	cert, _ := ioutil.ReadFile(`D:\Godcong\Workspace\g7n3\src\github.com\godcong\wopay\wx\cert\apiclient_cert.p12`)
+	cert, _ := ioutil.ReadFile(`\apiclient_cert.p12`)
 	return cert
 }
 func (impl *PayConfigImpl) ConnectTimeoutMs() int {
