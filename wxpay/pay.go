@@ -267,7 +267,7 @@ func (data PayData) ToJson() string {
 	return string(b)
 }
 
-/* UnifiedOrder
+/** UnifiedOrder
 * 作用：统一下单
 * 场景：公共号支付、扫码支付、APP支付
 * @param data 向wxpay post的请求数据
@@ -277,7 +277,7 @@ func (pay *Pay) UnifiedOrder(data PayData) (PayData, error) {
 	return pay.unifiedOrder(data, pay.config.ConnectTimeoutMs(), pay.config.ReadTimeoutMs())
 }
 
-/* UnifiedOrder
+/** UnifiedOrder
 * 作用：统一下单
 * 场景：公共号支付、扫码支付、APP支付
 * @param data 向wxpay post的请求数据
@@ -301,7 +301,7 @@ func (pay *Pay) unifiedOrder(data PayData, connectTimeoutMs int, readTimeoutMs i
 	return XmlToMap(resp), nil
 }
 
-/*
+/**
 * 作用：关闭订单
 * 场景：公共号支付、扫码支付、APP支付
 * @param data 向wxpay post的请求数据
@@ -311,7 +311,7 @@ func (pay *Pay) CloseOrder(data PayData) (PayData, error) {
 	return pay.closeOrder(data, pay.config.ConnectTimeoutMs(), pay.config.ReadTimeoutMs())
 }
 
-/* CloseOrderTimeout
+/** CloseOrderTimeout
 * 作用：关闭订单
 * 场景：公共号支付、扫码支付、APP支付
 * @param data 向wxpay post的请求数据
@@ -331,7 +331,7 @@ func (pay *Pay) closeOrder(data PayData, connectTimeoutMs, readTimeoutMs int) (P
 	return XmlToMap(resp), nil
 }
 
-/* QueryOrder
+/** QueryOrder
 * 作用：查询订单
 * 场景：刷卡支付、公共号支付、扫码支付、APP支付
 * @param data 向wxpay post的请求数据
@@ -341,7 +341,7 @@ func (pay *Pay) QueryOrder(data PayData) (PayData, error) {
 	return pay.queryOrder(data, pay.config.ConnectTimeoutMs(), pay.config.ReadTimeoutMs())
 }
 
-/* QueryOrder
+/** QueryOrder
 * 作用：查询订单
 * 场景：刷卡支付、公共号支付、扫码支付、APP支付
 * @param data 向wxpay post的请求数据
@@ -360,7 +360,7 @@ func (pay *Pay) queryOrder(data PayData, connectTimeoutMs int, readTimeoutMs int
 	return XmlToMap(resp), nil
 }
 
-/* ReverseOrder
+/** ReverseOrder
 * 作用：撤销订单
 * 场景：刷卡支付
 * @param data 向wxpay post的请求数据
@@ -370,7 +370,7 @@ func (pay *Pay) ReverseOrder(data PayData) (PayData, error) {
 	return pay.reverseOrder(data, pay.config.ConnectTimeoutMs(), pay.config.ReadTimeoutMs())
 }
 
-/* ReverseOrderTimeout
+/** ReverseOrderTimeout
 * 作用：撤销订单
 * 场景：刷卡支付
 * @param data 向wxpay post的请求数据
@@ -390,7 +390,7 @@ func (pay *Pay) reverseOrder(data PayData, connectTimeoutMs int, readTimeoutMs i
 	return XmlToMap(resp), nil
 }
 
-/* Refund
+/** Refund
 * 作用：申请退款
 * 场景：刷卡支付、公共号支付、扫码支付、APP支付
 * 其他：需要证书
@@ -401,7 +401,7 @@ func (pay *Pay) Refund(data PayData) (PayData, error) {
 	return pay.refund(data, pay.config.ConnectTimeoutMs(), pay.config.ReadTimeoutMs())
 }
 
-/* RefundTimeout
+/** RefundTimeout
 * 作用：申请退款
 * 场景：刷卡支付、公共号支付、扫码支付、APP支付
 * 其他：需要证书
@@ -422,7 +422,7 @@ func (pay *Pay) refund(data PayData, connectTimeoutMs int, readTimeoutMs int) (P
 	return XmlToMap(resp), nil
 }
 
-/* ShortUrl
+/** ShortUrl
 * 作用：转换短链接
 * 场景：刷卡支付、扫码支付
 * @param data 向wxpay post的请求数据
@@ -432,7 +432,7 @@ func (pay *Pay) ShortUrl(data PayData) (PayData, error) {
 	return pay.shortUrl(data, pay.config.ConnectTimeoutMs(), pay.config.ReadTimeoutMs())
 }
 
-/* ShortUrlTimeout
+/** ShortUrlTimeout
 * 作用：转换短链接
 * 场景：刷卡支付、扫码支付
 * @param data 向wxpay post的请求数据
@@ -469,7 +469,7 @@ func (pay *Pay) queryRefund(data PayData, connectTimeoutMs int, readTimeoutMs in
 	return XmlToMap(resp), nil
 }
 
-/* DownloadBill
+/** DownloadBill
 * 作用：对账单下载
 * 场景：刷卡支付、公共号支付、扫码支付、APP支付
 * 其他：无论是否成功都返回Map。若成功，返回的Map中含有return_code、return_msg、data，
@@ -481,7 +481,7 @@ func (pay *Pay) DownloadBill(data PayData) (PayData, error) {
 	return pay.downloadBill(data, pay.config.ConnectTimeoutMs(), pay.config.ReadTimeoutMs())
 }
 
-/* DownloadBillTimeout
+/** DownloadBillTimeout
 * 作用：对账单下载
 * 场景：刷卡支付、公共号支付、扫码支付、APP支付
 * 其他：无论是否成功都返回Map。若成功，返回的Map中含有return_code、return_msg、data，
@@ -512,7 +512,7 @@ func (pay *Pay) downloadBill(data PayData, connectTimeoutMs int, readTimeoutMs i
 	return ret, nil
 }
 
-/* Report
+/** Report
 * 作用：交易保障
 * 场景：刷卡支付、公共号支付、扫码支付、APP支付
 * @param data 向wxpay post的请求数据
@@ -522,7 +522,7 @@ func (pay *Pay) Report(data PayData) (PayData, error) {
 	return pay.report(data, pay.config.ConnectTimeoutMs(), pay.config.ReadTimeoutMs())
 }
 
-/* ReportTimeout
+/** ReportTimeout
 * 作用：交易保障
 * 场景：刷卡支付、公共号支付、扫码支付、APP支付
 * @param data 向wxpay post的请求数据
@@ -541,7 +541,7 @@ func (pay *Pay) report(data PayData, connectTimeoutMs int, readTimeoutMs int) (P
 	return XmlToMap(resp), nil
 }
 
-/* AuthCodeToOpenid
+/** AuthCodeToOpenid
 * 作用: 授权码查询OPENID接口
 * 场景：刷卡支付
 * @param data 向wxpay post的请求数据
@@ -551,7 +551,7 @@ func (pay *Pay) AuthCodeToOpenid(data PayData) (PayData, error) {
 	return pay.authCodeToOpenid(data, pay.config.ConnectTimeoutMs(), pay.config.ReadTimeoutMs())
 }
 
-/* AuthCodeToOpenidTimeout
+/** AuthCodeToOpenidTimeout
 * 作用: 授权码查询OPENID接口
 * 场景：刷卡支付
 * @param data 向wxpay post的请求数据
@@ -571,7 +571,7 @@ func (pay *Pay) authCodeToOpenid(data PayData, connectTimeoutMs int, readTimeout
 	return XmlToMap(resp), nil
 }
 
-/* MicroPay
+/** MicroPay
 * 作用：提交刷卡支付
 * 场景：刷卡支付
 * @param data 向wxpay post的请求数据
@@ -581,7 +581,7 @@ func (pay *Pay) MicroPay(data PayData) (PayData, error) {
 	return pay.microPay(data, pay.config.ConnectTimeoutMs(), pay.config.ReadTimeoutMs())
 }
 
-/* MicroPayTimeout
+/** MicroPayTimeout
 * 作用：提交刷卡支付
 * 场景：刷卡支付
 * @param data 向wxpay post的请求数据
@@ -601,7 +601,7 @@ func (pay *Pay) microPay(data PayData, connectTimeoutMs int, readTimeoutMs int) 
 	return XmlToMap(resp), nil
 }
 
-/* MicroPayWithPos
+/** MicroPayWithPos
 * 提交刷卡支付，针对软POS，尽可能做成功
 * 内置重试机制，最多60s
 * @param data
@@ -611,7 +611,7 @@ func (pay *Pay) MicroPayWithPos(data PayData) (PayData, error) {
 	return pay.microPayWithPosConnectTimeout(data, pay.config.ConnectTimeoutMs())
 }
 
-/* MicroPayWithPosConnectTimeout
+/** MicroPayWithPosConnectTimeout
 * 提交刷卡支付，针对软POS，尽可能做成功
 * 内置重试机制，最多60s
 * @param data
