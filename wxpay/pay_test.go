@@ -99,3 +99,74 @@ func TestUnifiedOrderSpeed(t *testing.T) {
 	}
 
 }
+
+func TestQueryRefund(t *testing.T) {
+	data := PayData{"out_refund_no": out_trade_no}
+	r, e := QueryRefund(data)
+	if r.Get("return_msg") == "OK" {
+		log.Println(r, e)
+	}
+
+}
+
+func TestDownloadBill(t *testing.T) {
+	data := PayData{
+		"bill_date": "20170913",
+		"bill_type": "ALL",
+	}
+	r, e := DownloadBill(data)
+
+	log.Println(r, e)
+
+}
+
+//untest
+func TestMicroPay(t *testing.T) {
+	data := make(PayData)
+	data.Set("body", "腾讯充值中心-QQ会员充值")
+	data.Set("out_trade_no", out_trade_no)
+	data.Set("device_info", "")
+	data.Set("fee_type", "CNY")
+	data.Set("total_fee", "1")
+	data.Set("spbill_create_ip", "123.12.12.123")
+	data.Set("notify_url", "http://test.letiantian.me/wxpay/notify")
+	data.Set("trade_type", "NATIVE")
+	data.Set("product_id", "12")
+
+	rdata, err := MicroPay(data)
+	log.Println(rdata, err)
+}
+
+//untest
+func TestMicroPayWithPos(t *testing.T) {
+	data := make(PayData)
+	data.Set("body", "腾讯充值中心-QQ会员充值")
+	data.Set("out_trade_no", out_trade_no)
+	data.Set("device_info", "")
+	data.Set("fee_type", "CNY")
+	data.Set("total_fee", "1")
+	data.Set("spbill_create_ip", "123.12.12.123")
+	data.Set("notify_url", "http://test.letiantian.me/wxpay/notify")
+	data.Set("trade_type", "NATIVE")
+	data.Set("product_id", "12")
+
+	rdata, err := MicroPayWithPos(data)
+	log.Println(rdata, err)
+}
+
+//untest
+func TestAuthCodeToOpenid(t *testing.T) {
+	data := make(PayData)
+	data.Set("body", "腾讯充值中心-QQ会员充值")
+	data.Set("out_trade_no", out_trade_no)
+	data.Set("device_info", "")
+	data.Set("fee_type", "CNY")
+	data.Set("total_fee", "1")
+	data.Set("spbill_create_ip", "123.12.12.123")
+	data.Set("notify_url", "http://test.letiantian.me/wxpay/notify")
+	data.Set("trade_type", "NATIVE")
+	data.Set("product_id", "12")
+
+	rdata, err := AuthCodeToOpenid(data)
+	log.Println(rdata, err)
+}
