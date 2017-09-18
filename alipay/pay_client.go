@@ -1,6 +1,6 @@
 package alipay
 
-type PayClient struct {
+type PayClientImpl struct {
 	serverUrl       string
 	appId           string
 	privateKey      string
@@ -13,4 +13,7 @@ type PayClient struct {
 	charset         string
 	connectTimeout  int //= 3000
 	readTimeout     int //= 15000
+}
+
+type PayClient interface {
 }

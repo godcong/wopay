@@ -26,6 +26,7 @@ type Config struct {
 var config *Config
 
 func init() {
+
 	ConfigInstance()
 }
 func loadConfig() *toml.Tree {
