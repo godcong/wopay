@@ -15,10 +15,10 @@ const return_url = "http://商户网关地址/alipay.trade.wap.pay-JAVA-UTF-8/re
 const URL = "https://openapi.alipay.com/gateway.do"
 
 // 编码
-const CHARSET = "UTF-8"
+const CHARSET_UTF_8 = "UTF-8"
 
 // 返回格式
-const FORMAT = "json"
+//const FORMAT_JSON = "json"
 
 // 支付宝公钥
 const ALIPAY_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjrEVFMOSiNJXaRNKicQuQdsREraftDA9Tua3WNZwcpeXeh8Wrt+V9JilLqSa7N7sVqwpvv8zWChgXhX/A96hEg97Oxe6GKUmzaZRNh0cZZ88vpkn5tlgL4mH/dhSr3Ip00kvM4rHq9PwuT4k7z1DpZAf1eghK8Q5BgxL88d0X07m9X96Ijd0yMkXArzD7jg+noqfbztEKoH3kPMRJC2w4ByVdweWUT2PwrlATpZZtYLmtDvUKG/sOkNAIKEMg3Rut1oKWpjyYanzDgS7Cg3awr1KPTl9rHCazk15aNYowmYtVabKwbGVToCAGK+qQ1gT3ELhkGnf3+h53fukNqRH+wIDAQAB"
