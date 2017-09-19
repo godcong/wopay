@@ -16,4 +16,15 @@ type PayClientImpl struct {
 }
 
 type PayClient interface {
+	/**
+	 * @param request
+	 * @return PayResponse,error
+	 */
+	Execute(request PayRequest) (PayResponse, error)
+	/**
+	 * @param request
+	 * @param accessToken
+	 * @return PayResponse,error
+	 */
+	ExecuteToken(request PayRequest, accessToken string, appToken string) (PayResponse, error)
 }
