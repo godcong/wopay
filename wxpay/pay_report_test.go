@@ -1,4 +1,4 @@
-package wxpay
+package wxpay_test
 
 import (
 	"bytes"
@@ -7,6 +7,8 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/godcong/wopay/wxpay"
 )
 
 func BenchmarkNewReportInfo(b *testing.B) {
@@ -28,8 +30,8 @@ func BenchmarkNewReportInfo(b *testing.B) {
 }
 
 func TestReportInfo_ToLineString(t *testing.T) {
-	log.Println(CurrentTimeStamp())
-	info := NewReportInfo("uuid", int64(1504178107), int64(1000), "firstDomain", true, 1000, 1000, true, true, true)
+	log.Println(wxpay.CurrentTimeStamp())
+	info := wxpay.NewReportInfo("uuid", int64(1504178107), int64(1000), "firstDomain", true, 1000, 1000, true, true, true)
 	log.Println(info.ToLineString("2ab9071b06b9f739b950ddb41db2690d"))
 	//v0,wxpay go sdk v1.0,uuid,1504178107,1000,firstDomain,true,1000,1000,1,1,1,4593BAA7FEACF3DE98EEAFDB5907291966589ED0BA2327E7852B9BAF00C48913
 }

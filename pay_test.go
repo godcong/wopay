@@ -1,4 +1,4 @@
-package wopay
+package wopay_test
 
 import (
 	"log"

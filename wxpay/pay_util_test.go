@@ -1,4 +1,4 @@
-package wxpay
+package wxpay_test
 
 import (
 	"log"
