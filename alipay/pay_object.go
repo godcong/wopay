@@ -1,4 +1,3 @@
 package alipay
 
-type PayObject interface {
-}
+type PayObject interface{}

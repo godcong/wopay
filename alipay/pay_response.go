@@ -18,7 +18,7 @@ func (resp *PayResponseImple) IsSuccess() bool {
 	return true
 }
 
-var pay (PayResponse) = PayResponseImple{}
+//var pay (PayResponse) = PayResponseImple{}
 
 type PayResponse interface {
 

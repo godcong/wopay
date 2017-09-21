@@ -15,7 +15,7 @@ const return_url = "http://商户网关地址/alipay.trade.wap.pay-JAVA-UTF-8/re
 const URL = "https://openapi.alipay.com/gateway.do"
 
 // 编码
-const CHARSET_UTF_8 = "UTF-8"
+//const CHARSET_UTF_8 = "UTF-8"
 
 // 返回格式
 //const FORMAT_JSON = "json"
