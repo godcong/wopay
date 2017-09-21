@@ -35,3 +35,10 @@ func BenchmarkLoadConfig(b *testing.B) {
 	log.Println("end", end-mid)
 
 }
+
+func TestT1(t *testing.T) {
+	l, e := time.LoadLocation("Asia/Shanghai")
+	log.Println(time.FixedZone("", 8))
+	log.Println(l.String(), e)
+	log.Println(time.Now().In(l))
+}

@@ -50,10 +50,10 @@ const ENCRYPT_TYPE = "encrypt_type"
 const BIZ_CONTENT_KEY = "biz_content"
 
 /** 默认时间格式 **/
-const DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss"
+const DATE_TIME_FORMAT = "2006-01-02 03:04:05"
 
 /**  Date默认时区 **/
-const DATE_TIMEZONE = "GMT+8"
+const DATE_TIMEZONE = "Asia/Shanghai"
 
 /** UTF-8字符集 **/
 const CHARSET_UTF8 = "UTF-8"
@@ -68,7 +68,7 @@ const FORMAT_JSON = "json"
 const FORMAT_XML = "xml"
 
 /** SDK版本号 */
-const SDK_VERSION = "alipay-sdk-java-dynamicVersionNo"
+const SDK_VERSION = "alipay-sdk-go-dynamicVersionNo"
 
 const PROD_CODE = "prod_code"
 
