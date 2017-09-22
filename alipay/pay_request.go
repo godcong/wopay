@@ -1,5 +1,7 @@
 package alipay
 
+import "reflect"
+
 type PayRequest interface {
 	PayResponse
 	/**
@@ -109,7 +111,7 @@ type PayRequest interface {
 	 *
 	 * @return 响应类型
 	 */
-	GetResponse() PayResponse
+	GetResponseType() reflect.Type
 
 	/**
 	 * 判断是否需要加密
@@ -135,15 +137,269 @@ type PayRequest interface {
 	SetBizModel(bizModel PayObject)
 }
 
-//type AlipayRequest struct {
-//}
-
 type PayRequestWap struct {
+}
+
+func (*PayRequestWap) GetCode() string {
+	panic("implement me")
+}
+
+func (*PayRequestWap) SetCode(code string) {
+	panic("implement me")
+}
+
+func (*PayRequestWap) GetMsg() string {
+	panic("implement me")
+}
+
+func (*PayRequestWap) SetMsg(msg string) {
+	panic("implement me")
+}
+
+func (*PayRequestWap) GetSubCode() string {
+	panic("implement me")
+}
+
+func (*PayRequestWap) SetSubCode(subCode string) {
+	panic("implement me")
+}
+
+func (*PayRequestWap) GetSubMsg() string {
+	panic("implement me")
+}
+
+func (*PayRequestWap) SetSubMsg(subMsg string) {
+	panic("implement me")
+}
+
+func (*PayRequestWap) GetBody() string {
+	panic("implement me")
+}
+
+func (*PayRequestWap) SetBody(body string) {
+	panic("implement me")
+}
+
+func (*PayRequestWap) GetParams() map[string]string {
+	panic("implement me")
+}
+
+func (*PayRequestWap) SetParams(params map[string]string) {
+	panic("implement me")
+}
+
+func (*PayRequestWap) IsSuccess() bool {
+	panic("implement me")
+}
+
+func (*PayRequestWap) GetApiMethodName() string {
+	panic("implement me")
+}
+
+func (*PayRequestWap) GetTextParams() map[string]string {
+	panic("implement me")
+}
+
+func (*PayRequestWap) GetApiVersion() string {
+	panic("implement me")
+}
+
+func (*PayRequestWap) SetApiVersion(apiVersion string) {
+	panic("implement me")
+}
+
+func (*PayRequestWap) GetTerminalType() string {
+	panic("implement me")
+}
+
+func (*PayRequestWap) SetTerminalType(terminalType string) {
+	panic("implement me")
+}
+
+func (*PayRequestWap) GetTerminalInfo() string {
+	panic("implement me")
+}
+
+func (*PayRequestWap) SetTerminalInfo(terminalInfo string) {
+	panic("implement me")
+}
+
+func (*PayRequestWap) GetProdCode() string {
+	panic("implement me")
+}
+
+func (*PayRequestWap) SetProdCode(prodCode string) {
+	panic("implement me")
+}
+
+func (*PayRequestWap) GetNotifyUrl() string {
+	panic("implement me")
+}
+
+func (*PayRequestWap) SetNotifyUrl(notifyUrl string) {
+	panic("implement me")
+}
+
+func (*PayRequestWap) GetReturnUrl() string {
+	panic("implement me")
+}
+
+func (*PayRequestWap) SetReturnUrl(returnUrl string) {
+	panic("implement me")
+}
+
+func (*PayRequestWap) GetResponse() PayResponse {
+	panic("implement me")
+}
+
+func (*PayRequestWap) IsNeedEncrypt() bool {
+	panic("implement me")
+}
+
+func (*PayRequestWap) SetNeedEncrypt(needEncrypt bool) {
+	panic("implement me")
+}
+
+func (*PayRequestWap) GetBizModel() PayObject {
+	panic("implement me")
+}
+
+func (*PayRequestWap) SetBizModel(bizModel PayObject) {
+	panic("implement me")
 }
 
 type PayRequestApp struct {
 }
-type PayRequestPage struct {
+
+func (*PayRequestApp) GetCode() string {
+	panic("implement me")
+}
+
+func (*PayRequestApp) SetCode(code string) {
+	panic("implement me")
+}
+
+func (*PayRequestApp) GetMsg() string {
+	panic("implement me")
+}
+
+func (*PayRequestApp) SetMsg(msg string) {
+	panic("implement me")
+}
+
+func (*PayRequestApp) GetSubCode() string {
+	panic("implement me")
+}
+
+func (*PayRequestApp) SetSubCode(subCode string) {
+	panic("implement me")
+}
+
+func (*PayRequestApp) GetSubMsg() string {
+	panic("implement me")
+}
+
+func (*PayRequestApp) SetSubMsg(subMsg string) {
+	panic("implement me")
+}
+
+func (*PayRequestApp) GetBody() string {
+	panic("implement me")
+}
+
+func (*PayRequestApp) SetBody(body string) {
+	panic("implement me")
+}
+
+func (*PayRequestApp) GetParams() map[string]string {
+	panic("implement me")
+}
+
+func (*PayRequestApp) SetParams(params map[string]string) {
+	panic("implement me")
+}
+
+func (*PayRequestApp) IsSuccess() bool {
+	panic("implement me")
+}
+
+func (*PayRequestApp) GetApiMethodName() string {
+	panic("implement me")
+}
+
+func (*PayRequestApp) GetTextParams() map[string]string {
+	panic("implement me")
+}
+
+func (*PayRequestApp) GetApiVersion() string {
+	panic("implement me")
+}
+
+func (*PayRequestApp) SetApiVersion(apiVersion string) {
+	panic("implement me")
+}
+
+func (*PayRequestApp) GetTerminalType() string {
+	panic("implement me")
+}
+
+func (*PayRequestApp) SetTerminalType(terminalType string) {
+	panic("implement me")
+}
+
+func (*PayRequestApp) GetTerminalInfo() string {
+	panic("implement me")
+}
+
+func (*PayRequestApp) SetTerminalInfo(terminalInfo string) {
+	panic("implement me")
+}
+
+func (*PayRequestApp) GetProdCode() string {
+	panic("implement me")
+}
+
+func (*PayRequestApp) SetProdCode(prodCode string) {
+	panic("implement me")
+}
+
+func (*PayRequestApp) GetNotifyUrl() string {
+	panic("implement me")
+}
+
+func (*PayRequestApp) SetNotifyUrl(notifyUrl string) {
+	panic("implement me")
+}
+
+func (*PayRequestApp) GetReturnUrl() string {
+	panic("implement me")
+}
+
+func (*PayRequestApp) SetReturnUrl(returnUrl string) {
+	panic("implement me")
+}
+
+func (*PayRequestApp) GetResponse() PayResponse {
+	panic("implement me")
+}
+
+func (*PayRequestApp) IsNeedEncrypt() bool {
+	panic("implement me")
+}
+
+func (*PayRequestApp) SetNeedEncrypt(needEncrypt bool) {
+	panic("implement me")
+}
+
+func (*PayRequestApp) GetBizModel() PayObject {
+	panic("implement me")
+}
+
+func (*PayRequestApp) SetBizModel(bizModel PayObject) {
+	panic("implement me")
+}
+
+type payRequest struct {
 	/**
 	* add user-defined text parameters
 	 */
@@ -161,187 +417,325 @@ type PayRequestPage struct {
 	bizModel     interface{}
 }
 
-/**
- * 获取TOP的API名称。
- *
- * @return API名称
- */
-func (PayRequestPage) GetApiMethodName() string {
-	return ""
+func (*payRequest) GetCode() string {
+	panic("implement me")
 }
 
-/**
- * 获取所有的Key-Value形式的文本请求参数集合。其中：
- * <ul>
- * <li>Key: 请求参数名</li>
- * <li>Value: 请求参数值</li>
- * </ul>
- *
- * @return 文本请求参数集合
- */
-func (PayRequestPage) GetTextParams() map[string]string {
-	return nil
+func (*payRequest) SetCode(code string) {
+	panic("implement me")
 }
 
-/**
- * 得到当前接口的版本
- *
- * @return API版本
- */
-func (PayRequestPage) GetApiVersion() string {
-	return ""
+func (*payRequest) GetMsg() string {
+	panic("implement me")
 }
 
-/**
- * 设置当前API的版本信息
- *
- * @param apiVersion API版本
- */
-func (PayRequestPage) SetApiVersion(apiVersion string) {
-
+func (*payRequest) SetMsg(msg string) {
+	panic("implement me")
 }
 
-/**
- * 获取终端类型
- *
- * @return 终端类型
- */
-func (PayRequestPage) GetTerminalType() string {
-	return ""
+func (*payRequest) GetSubCode() string {
+	panic("implement me")
 }
 
-/**
- * 设置终端类型
- *
- * @param terminalType 终端类型
- */
-func (PayRequestPage) SetTerminalType(terminalType string) {
-
+func (*payRequest) SetSubCode(subCode string) {
+	panic("implement me")
 }
 
-/**
- * 获取终端信息
- *
- * @return 终端信息
- */
-func (PayRequestPage) GetTerminalInfo() string {
-	return ""
+func (*payRequest) GetSubMsg() string {
+	panic("implement me")
 }
 
-/**
- * 设置终端信息
- *
- * @param terminalInfo 终端信息
- */
-func (PayRequestPage) SetTerminalInfo(terminalInfo string) {}
-
-/**
- * 获取产品码
- *
- * @return 产品码
- */
-func (PayRequestPage) GetProdCode() string {
-	return ""
+func (*payRequest) SetSubMsg(subMsg string) {
+	panic("implement me")
 }
 
-/**
- * 设置产品码
- *
- * @param prodCode 产品码
- */
-func (PayRequestPage) SetProdCode(prodCode string) {}
-
-/**
- * 返回通知地址
- *
- * @return
- */
-func (PayRequestPage) GetNotifyUrl() string {
-	return ""
+func (*payRequest) GetBody() string {
+	panic("implement me")
 }
 
-/**
- *  设置通知地址
- *
- * @param notifyUrl
- */
-func (PayRequestPage) SetNotifyUrl(notifyUrl string) {}
-
-/**
- * 返回回跳地址
- *
- * @return
- */
-func (PayRequestPage) GetReturnUrl() string {
-	return ""
+func (*payRequest) SetBody(body string) {
+	panic("implement me")
 }
 
-/**
- *  设置回跳地址
- *
- * @param notifyUrl
- */
-func (PayRequestPage) SetReturnUrl(returnUrl string) {}
-
-/**
- * 得到当前API的响应结果类型
- *
- * @return 响应类型
- */
-func (PayRequestPage) GetResponse() PayResponse {
-	return nil
+func (*payRequest) GetParams() map[string]string {
+	panic("implement me")
 }
 
-/**
- * 判断是否需要加密
- *
- * @return
- */
-func (PayRequestPage) IsNeedEncrypt() bool {
-	return false
+func (*payRequest) SetParams(params map[string]string) {
+	panic("implement me")
 }
 
-/**
- * 设置请求是否需要加密
- *
- * @param needEncrypt
- */
-func (PayRequestPage) SetNeedEncrypt(needEncrypt bool) {}
-
-func (PayRequestPage) GetBizModel() PayObject {
-	return nil
+func (*payRequest) IsSuccess() bool {
+	panic("implement me")
 }
 
-/**
- * 设置业务实体，如需使用此方法，请勿直接设置biz_content
- *
- * @param bizModel
- */
-func (PayRequestPage) SetBizModel(bizModel PayObject) {}
-
-/**
- * Getter method for property <tt>code</tt>.
- *
- * @return property value of code
- */
-func (PayRequestPage) GetCode() string {
-	return ""
+func (*payRequest) GetApiMethodName() string {
+	panic("implement me")
 }
 
-/**
- * Setter method for property <tt>code</tt>.
- *
- * @param code value to be assigned to property code
- */
-func (PayRequestPage) SetCode(code string)                {}
-func (PayRequestPage) GetMsg() string                     { return "" }
-func (PayRequestPage) SetMsg(msg string)                  {}
-func (PayRequestPage) GetSubCode() string                 { return "" }
-func (PayRequestPage) SetSubCode(subCode string)          {}
-func (PayRequestPage) GetSubMsg() string                  { return "" }
-func (PayRequestPage) SetSubMsg(subMsg string)            {}
-func (PayRequestPage) SetBody(body string)                {}
-func (PayRequestPage) GetBody() string                    { return "" }
-func (PayRequestPage) GetParams() map[string]string       { return nil }
-func (PayRequestPage) SetParams(params map[string]string) {}
-func (PayRequestPage) IsSuccess() bool                    { return false }
+func (*payRequest) GetTextParams() map[string]string {
+	panic("implement me")
+}
+
+func (*payRequest) GetApiVersion() string {
+	panic("implement me")
+}
+
+func (*payRequest) SetApiVersion(apiVersion string) {
+	panic("implement me")
+}
+
+func (*payRequest) GetTerminalType() string {
+	panic("implement me")
+}
+
+func (*payRequest) SetTerminalType(terminalType string) {
+	panic("implement me")
+}
+
+func (*payRequest) GetTerminalInfo() string {
+	panic("implement me")
+}
+
+func (*payRequest) SetTerminalInfo(terminalInfo string) {
+	panic("implement me")
+}
+
+func (*payRequest) GetProdCode() string {
+	panic("implement me")
+}
+
+func (*payRequest) SetProdCode(prodCode string) {
+	panic("implement me")
+}
+
+func (*payRequest) GetNotifyUrl() string {
+	panic("implement me")
+}
+
+func (*payRequest) SetNotifyUrl(notifyUrl string) {
+	panic("implement me")
+}
+
+func (*payRequest) GetReturnUrl() string {
+	panic("implement me")
+}
+
+func (*payRequest) SetReturnUrl(returnUrl string) {
+	panic("implement me")
+}
+
+func (*payRequest) GetResponseType() reflect.Type {
+	panic("implement me")
+}
+
+func (*payRequest) IsNeedEncrypt() bool {
+	panic("implement me")
+}
+
+func (*payRequest) SetNeedEncrypt(needEncrypt bool) {
+	panic("implement me")
+}
+
+func (*payRequest) GetBizModel() PayObject {
+	panic("implement me")
+}
+
+func (*payRequest) SetBizModel(bizModel PayObject) {
+	panic("implement me")
+}
+
+type PayRequestPage struct {
+	payRequest
+}
+
+func NewPayRequest() PayRequest {
+	return &PayRequestPage{}
+}
+
+//
+///**
+// * 获取TOP的API名称。
+// *
+// * @return API名称
+// */
+//func (page *PayRequestPage) GetApiMethodName() string {
+//	return ""
+//}
+//
+///**
+// * 获取所有的Key-Value形式的文本请求参数集合。其中：
+// * <ul>
+// * <li>Key: 请求参数名</li>
+// * <li>Value: 请求参数值</li>
+// * </ul>
+// *
+// * @return 文本请求参数集合
+// */
+//func (page *PayRequestPage) GetTextParams() map[string]string {
+//	return nil
+//}
+//
+///**
+// * 得到当前接口的版本
+// *
+// * @return API版本
+// */
+//func (page *PayRequestPage) GetApiVersion() string {
+//	return ""
+//}
+//
+///**
+// * 设置当前API的版本信息
+// *
+// * @param apiVersion API版本
+// */
+//func (page *PayRequestPage) SetApiVersion(apiVersion string) {
+//
+//}
+//
+///**
+// * 获取终端类型
+// *
+// * @return 终端类型
+// */
+//func (page *PayRequestPage) GetTerminalType() string {
+//	return ""
+//}
+//
+///**
+// * 设置终端类型
+// *
+// * @param terminalType 终端类型
+// */
+//func (page *PayRequestPage) SetTerminalType(terminalType string) {
+//
+//}
+//
+///**
+// * 获取终端信息
+// *
+// * @return 终端信息
+// */
+//func (page *PayRequestPage) GetTerminalInfo() string {
+//	return ""
+//}
+//
+///**
+// * 设置终端信息
+// *
+// * @param terminalInfo 终端信息
+// */
+//func (page *PayRequestPage) SetTerminalInfo(terminalInfo string) {}
+//
+///**
+// * 获取产品码
+// *
+// * @return 产品码
+// */
+//func (page *PayRequestPage) GetProdCode() string {
+//	return ""
+//}
+//
+///**
+// * 设置产品码
+// *
+// * @param prodCode 产品码
+// */
+//func (page *PayRequestPage) SetProdCode(prodCode string) {}
+//
+///**
+// * 返回通知地址
+// *
+// * @return
+// */
+//func (page *PayRequestPage) GetNotifyUrl() string {
+//	return ""
+//}
+//
+///**
+// *  设置通知地址
+// *
+// * @param notifyUrl
+// */
+//func (page *PayRequestPage) SetNotifyUrl(notifyUrl string) {}
+//
+///**
+// * 返回回跳地址
+// *
+// * @return
+// */
+//func (page *PayRequestPage) GetReturnUrl() string {
+//	return ""
+//}
+//
+///**
+// *  设置回跳地址
+// *
+// * @param notifyUrl
+// */
+//func (page *PayRequestPage) SetReturnUrl(returnUrl string) {}
+//
+///**
+// * 得到当前API的响应结果类型
+// *
+// * @return 响应类型
+// */
+//func (page *PayRequestPage) GetResponse() PayResponse {
+//	return nil
+//}
+//
+///**
+// * 判断是否需要加密
+// *
+// * @return
+// */
+//func (page *PayRequestPage) IsNeedEncrypt() bool {
+//	return false
+//}
+//
+///**
+// * 设置请求是否需要加密
+// *
+// * @param needEncrypt
+// */
+//func (page *PayRequestPage) SetNeedEncrypt(needEncrypt bool) {}
+//
+//func (page *PayRequestPage) GetBizModel() PayObject {
+//	return nil
+//}
+//
+///**
+// * 设置业务实体，如需使用此方法，请勿直接设置biz_content
+// *
+// * @param bizModel
+// */
+//func (page *PayRequestPage) SetBizModel(bizModel PayObject) {}
+//
+///**
+// * Getter method for property <tt>code</tt>.
+// *
+// * @return property value of code
+// */
+//func (page *PayRequestPage) GetCode() string {
+//	return ""
+//}
+//
+///**
+// * Setter method for property <tt>code</tt>.
+// *
+// * @param code value to be assigned to property code
+// */
+//func (page *PayRequestPage) SetCode(code string) {}
+//
+//func (page *PayRequestPage) GetMsg() string                     { return "" }
+//func (page *PayRequestPage) SetMsg(msg string)                  {}
+//func (page *PayRequestPage) GetSubCode() string                 { return "" }
+//func (page *PayRequestPage) SetSubCode(subCode string)          {}
+//func (page *PayRequestPage) GetSubMsg() string                  { return "" }
+//func (page *PayRequestPage) SetSubMsg(subMsg string)            {}
+func (page *PayRequestPage) SetBody(body string)                {}
+func (page *PayRequestPage) GetBody() string                    { return "" }
+func (page *PayRequestPage) GetParams() map[string]string       { return nil }
+func (page *PayRequestPage) SetParams(params map[string]string) {}
+func (page *PayRequestPage) IsSuccess() bool                    { return false }
