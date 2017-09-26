@@ -4,6 +4,8 @@ import (
 	"errors"
 	"strconv"
 	"sync"
+
+	"github.com/godcong/wopay/util"
 )
 
 var (
@@ -145,7 +147,7 @@ func (domain *payDomainSimpleImpl) GetDomainInfo() *DomainInfo {
 		return NewDomainInfo(DOMAIN_API, true)
 	}
 
-	now := CurrentTimeStampMS()
+	now := util.CurrentTimeStampMS()
 	if domain.domainTime == 0 { //first switch
 		domain.domainTime = now
 		return NewDomainInfo(DOMAIN_API2, false)

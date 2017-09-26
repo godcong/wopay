@@ -12,6 +12,8 @@ import (
 	"io/ioutil"
 	"log"
 	"time"
+
+	"github.com/godcong/wopay/util"
 )
 
 type PayRequest struct {
@@ -130,14 +132,14 @@ func (request *PayRequest) RequestWithoutCertTimeout(urlSuffix, uuid, data strin
 }
 
 func (request *PayRequest) request(urlSuffix, uuid, data string, connectTimeoutMs, readTimeoutMs int, useCert, autoReport bool) (string, error) {
-	startTimestampMs := CurrentTimeStampMS()
+	startTimestampMs := util.CurrentTimeStampMS()
 	firstHasDnsErr, firstHasConnectTimeout, firstHasReadTimeout := false, false, false
 	domainInfo := request.config.PayDomainInstance().GetDomainInfo()
 	if domainInfo == nil {
 		return "", ErrorNilDomain
 	}
 	result, err := request.requestOnce(domainInfo.Domain, urlSuffix, uuid, data, connectTimeoutMs, readTimeoutMs, useCert)
-	elapsedTimeMillis := CurrentTimeStampMS() - startTimestampMs
+	elapsedTimeMillis := util.CurrentTimeStampMS() - startTimestampMs
 	request.config.PayDomainInstance().Report(domainInfo.Domain, elapsedTimeMillis, nil)
 
 	PayReportInstance(request.config).Report(uuid,

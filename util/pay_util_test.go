@@ -1,12 +1,10 @@
-package wxpay_test
+package util_test
 
 import (
 	"log"
 	"testing"
 
-	"encoding/json"
-
-	"github.com/silenceper/wechat/oauth"
+	"github.com/godcong/wopay/util"
 )
 
 type pay_util_test struct {
@@ -66,13 +64,9 @@ var xmlStr = "<xml><return_code><![CDATA[SUCCESS]]></return_code>\n" +
 	"<cash_fee>1</cash_fee>\n" +
 	"</xml>"
 
-func TestGenerateSignature(t *testing.T) {
-	GenerateSignature(data, "key", 0)
-}
-
 func TestMakeSignMD5(t *testing.T) {
 	for _, v := range td {
-		md5 := MakeSignMD5(v.Data)
+		md5 := util.MakeSignMD5(v.Data)
 		if v.MD5 != md5 {
 			t.Error(v.Data, md5, v.MD5)
 		}
@@ -81,7 +75,7 @@ func TestMakeSignMD5(t *testing.T) {
 
 func TestMakeSignHMACSHA256(t *testing.T) {
 	for _, v := range td {
-		hmacsha256 := MakeSignHMACSHA256(v.Data, v.Key)
+		hmacsha256 := util.MakeSignHMACSHA256(v.Data, v.Key)
 		if v.HMACSHA256 != hmacsha256 {
 			t.Error(v.Data, hmacsha256, v.HMACSHA256)
 		}
@@ -89,43 +83,12 @@ func TestMakeSignHMACSHA256(t *testing.T) {
 }
 
 func TestMapToXml(t *testing.T) {
-	output := XmlToMap(input)
-	r, e := MapToXml(output)
+	output := util.XmlToMap(input)
+	r, e := util.MapToXml(output)
 	log.Println(r, e)
 }
 
 func TestXmlToMap(t *testing.T) {
 
-	log.Println(XmlToMap(input))
-}
-
-func TestGetSignKey(t *testing.T) {
-	log.Println(SandboxSignKey())
-}
-
-func TestIsSignatureValid(t *testing.T) {
-
-	log.Println(xmlStr)
-	log.Println("+++++++++++++++++")
-	log.Println(IsSignatureValid(xmlStr, "2ab9071b06b9f739b950ddb41db2690d"))
-	data := XmlToMap(xmlStr)
-	log.Println("+++++++++++++++++")
-	log.Println(data)
-	log.Println(len(data.Get("attach")))
-}
-
-func TestJsonApiParameters(t *testing.T) {
-	order := XmlToMap(res)
-	rlt, _ := json.Marshal(&order)
-	log.Println("order:", string(rlt))
-	log.Println(JsonApiParameters(order))
-
-}
-
-func TestEditAddressParameters(t *testing.T) {
-	token := oauth.ResAccessToken{
-		AccessToken: "123456",
-	}
-	s, e := EditAddressParameters("http://g7n3.com", &token)
-	t.Log(s, e)
+	log.Println(util.XmlToMap(input))
 }

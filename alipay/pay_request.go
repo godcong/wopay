@@ -138,265 +138,15 @@ type PayRequest interface {
 }
 
 type PayRequestWap struct {
-}
-
-func (*PayRequestWap) GetCode() string {
-	panic("implement me")
-}
-
-func (*PayRequestWap) SetCode(code string) {
-	panic("implement me")
-}
-
-func (*PayRequestWap) GetMsg() string {
-	panic("implement me")
-}
-
-func (*PayRequestWap) SetMsg(msg string) {
-	panic("implement me")
-}
-
-func (*PayRequestWap) GetSubCode() string {
-	panic("implement me")
-}
-
-func (*PayRequestWap) SetSubCode(subCode string) {
-	panic("implement me")
-}
-
-func (*PayRequestWap) GetSubMsg() string {
-	panic("implement me")
-}
-
-func (*PayRequestWap) SetSubMsg(subMsg string) {
-	panic("implement me")
-}
-
-func (*PayRequestWap) GetBody() string {
-	panic("implement me")
-}
-
-func (*PayRequestWap) SetBody(body string) {
-	panic("implement me")
-}
-
-func (*PayRequestWap) GetParams() map[string]string {
-	panic("implement me")
-}
-
-func (*PayRequestWap) SetParams(params map[string]string) {
-	panic("implement me")
-}
-
-func (*PayRequestWap) IsSuccess() bool {
-	panic("implement me")
-}
-
-func (*PayRequestWap) GetApiMethodName() string {
-	panic("implement me")
-}
-
-func (*PayRequestWap) GetTextParams() map[string]string {
-	panic("implement me")
-}
-
-func (*PayRequestWap) GetApiVersion() string {
-	panic("implement me")
-}
-
-func (*PayRequestWap) SetApiVersion(apiVersion string) {
-	panic("implement me")
-}
-
-func (*PayRequestWap) GetTerminalType() string {
-	panic("implement me")
-}
-
-func (*PayRequestWap) SetTerminalType(terminalType string) {
-	panic("implement me")
-}
-
-func (*PayRequestWap) GetTerminalInfo() string {
-	panic("implement me")
-}
-
-func (*PayRequestWap) SetTerminalInfo(terminalInfo string) {
-	panic("implement me")
-}
-
-func (*PayRequestWap) GetProdCode() string {
-	panic("implement me")
-}
-
-func (*PayRequestWap) SetProdCode(prodCode string) {
-	panic("implement me")
-}
-
-func (*PayRequestWap) GetNotifyUrl() string {
-	panic("implement me")
-}
-
-func (*PayRequestWap) SetNotifyUrl(notifyUrl string) {
-	panic("implement me")
-}
-
-func (*PayRequestWap) GetReturnUrl() string {
-	panic("implement me")
-}
-
-func (*PayRequestWap) SetReturnUrl(returnUrl string) {
-	panic("implement me")
-}
-
-func (*PayRequestWap) GetResponse() PayResponse {
-	panic("implement me")
-}
-
-func (*PayRequestWap) IsNeedEncrypt() bool {
-	panic("implement me")
-}
-
-func (*PayRequestWap) SetNeedEncrypt(needEncrypt bool) {
-	panic("implement me")
-}
-
-func (*PayRequestWap) GetBizModel() PayObject {
-	panic("implement me")
-}
-
-func (*PayRequestWap) SetBizModel(bizModel PayObject) {
-	panic("implement me")
+	payRequest
 }
 
 type PayRequestApp struct {
+	payRequest
 }
 
-func (*PayRequestApp) GetCode() string {
-	panic("implement me")
-}
-
-func (*PayRequestApp) SetCode(code string) {
-	panic("implement me")
-}
-
-func (*PayRequestApp) GetMsg() string {
-	panic("implement me")
-}
-
-func (*PayRequestApp) SetMsg(msg string) {
-	panic("implement me")
-}
-
-func (*PayRequestApp) GetSubCode() string {
-	panic("implement me")
-}
-
-func (*PayRequestApp) SetSubCode(subCode string) {
-	panic("implement me")
-}
-
-func (*PayRequestApp) GetSubMsg() string {
-	panic("implement me")
-}
-
-func (*PayRequestApp) SetSubMsg(subMsg string) {
-	panic("implement me")
-}
-
-func (*PayRequestApp) GetBody() string {
-	panic("implement me")
-}
-
-func (*PayRequestApp) SetBody(body string) {
-	panic("implement me")
-}
-
-func (*PayRequestApp) GetParams() map[string]string {
-	panic("implement me")
-}
-
-func (*PayRequestApp) SetParams(params map[string]string) {
-	panic("implement me")
-}
-
-func (*PayRequestApp) IsSuccess() bool {
-	panic("implement me")
-}
-
-func (*PayRequestApp) GetApiMethodName() string {
-	panic("implement me")
-}
-
-func (*PayRequestApp) GetTextParams() map[string]string {
-	panic("implement me")
-}
-
-func (*PayRequestApp) GetApiVersion() string {
-	panic("implement me")
-}
-
-func (*PayRequestApp) SetApiVersion(apiVersion string) {
-	panic("implement me")
-}
-
-func (*PayRequestApp) GetTerminalType() string {
-	panic("implement me")
-}
-
-func (*PayRequestApp) SetTerminalType(terminalType string) {
-	panic("implement me")
-}
-
-func (*PayRequestApp) GetTerminalInfo() string {
-	panic("implement me")
-}
-
-func (*PayRequestApp) SetTerminalInfo(terminalInfo string) {
-	panic("implement me")
-}
-
-func (*PayRequestApp) GetProdCode() string {
-	panic("implement me")
-}
-
-func (*PayRequestApp) SetProdCode(prodCode string) {
-	panic("implement me")
-}
-
-func (*PayRequestApp) GetNotifyUrl() string {
-	panic("implement me")
-}
-
-func (*PayRequestApp) SetNotifyUrl(notifyUrl string) {
-	panic("implement me")
-}
-
-func (*PayRequestApp) GetReturnUrl() string {
-	panic("implement me")
-}
-
-func (*PayRequestApp) SetReturnUrl(returnUrl string) {
-	panic("implement me")
-}
-
-func (*PayRequestApp) GetResponse() PayResponse {
-	panic("implement me")
-}
-
-func (*PayRequestApp) IsNeedEncrypt() bool {
-	panic("implement me")
-}
-
-func (*PayRequestApp) SetNeedEncrypt(needEncrypt bool) {
-	panic("implement me")
-}
-
-func (*PayRequestApp) GetBizModel() PayObject {
-	panic("implement me")
-}
-
-func (*PayRequestApp) SetBizModel(bizModel PayObject) {
-	panic("implement me")
+type PayRequestPage struct {
+	payRequest
 }
 
 type payRequest struct {
@@ -543,10 +293,6 @@ func (*payRequest) GetBizModel() PayObject {
 
 func (*payRequest) SetBizModel(bizModel PayObject) {
 	panic("implement me")
-}
-
-type PayRequestPage struct {
-	payRequest
 }
 
 func NewPayRequest() PayRequest {
@@ -734,8 +480,8 @@ func NewPayRequest() PayRequest {
 //func (page *PayRequestPage) SetSubCode(subCode string)          {}
 //func (page *PayRequestPage) GetSubMsg() string                  { return "" }
 //func (page *PayRequestPage) SetSubMsg(subMsg string)            {}
-func (page *PayRequestPage) SetBody(body string)                {}
-func (page *PayRequestPage) GetBody() string                    { return "" }
-func (page *PayRequestPage) GetParams() map[string]string       { return nil }
-func (page *PayRequestPage) SetParams(params map[string]string) {}
-func (page *PayRequestPage) IsSuccess() bool                    { return false }
+//func (page *PayRequestPage) SetBody(body string)                {}
+//func (page *PayRequestPage) GetBody() string                    { return "" }
+//func (page *PayRequestPage) GetParams() map[string]string       { return nil }
+//func (page *PayRequestPage) SetParams(params map[string]string) {}
+//func (page *PayRequestPage) IsSuccess() bool                    { return false }

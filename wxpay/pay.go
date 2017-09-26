@@ -1,12 +1,14 @@
 package wxpay
 
 import (
-	"encoding/json"
 	"log"
-	"sort"
 	"strings"
 	"time"
+
+	"github.com/godcong/wopay/util"
 )
+
+type PayData = util.PayData
 
 type Pay struct {
 	config     PayConfig
@@ -16,8 +18,6 @@ type Pay struct {
 	useSanBox  bool
 	notifyUrl  string
 }
-
-type PayData map[string]string
 
 type RequestFunc func(url string, data PayData, connectTimeoutMs, readTimeoutMs int) (string, error)
 
@@ -173,7 +173,7 @@ func (pay *Pay) ApplySandBox(url string) string {
 
 func (pay *Pay) RequestWithoutCert(url string, data PayData) (string, error) {
 	msgUUID := data.Get("nonce_str")
-	reqBody, err := MapToXml(data)
+	reqBody, err := util.MapToXml(data)
 	if err != nil {
 		return "", err
 	}
@@ -183,7 +183,7 @@ func (pay *Pay) RequestWithoutCert(url string, data PayData) (string, error) {
 
 func (pay *Pay) RequestWithoutCertTimeout(url string, data PayData, connectTimeoutMs, readTimeoutMs int) (string, error) {
 	msgUUID := data.Get("nonce_str")
-	reqBody, err := MapToXml(data)
+	reqBody, err := util.MapToXml(data)
 	if err != nil {
 		return "", err
 	}
@@ -193,7 +193,7 @@ func (pay *Pay) RequestWithoutCertTimeout(url string, data PayData, connectTimeo
 
 func (pay *Pay) RequestWithCert(url string, data PayData) (string, error) {
 	msgUUID := data.Get("nonce_str")
-	reqBody, err := MapToXml(data)
+	reqBody, err := util.MapToXml(data)
 	if err != nil {
 		return "", err
 	}
@@ -203,7 +203,7 @@ func (pay *Pay) RequestWithCert(url string, data PayData) (string, error) {
 
 func (pay *Pay) RequestWithCertTimeout(url string, data PayData, connectTimeoutMs, readTimeoutMs int) (string, error) {
 	msgUUID := data.Get("nonce_str")
-	reqBody, err := MapToXml(data)
+	reqBody, err := util.MapToXml(data)
 	if err != nil {
 		return "", err
 	}
@@ -227,7 +227,7 @@ func (pay *Pay) fillRequestTimeout(requestFunc RequestFunc, suffix string, data 
 func (pay *Pay) FillRequestData(data PayData) (PayData, error) {
 	data.Set("appid", pay.config.AppID())
 	data.Set("mch_id", pay.config.MchID())
-	data.Set("nonce_str", GenerateUUID())
+	data.Set("nonce_str", util.GenerateUUID())
 	data.Set("sign_type", pay.signType.ToString())
 	sign, e := GenerateSignature(data, pay.config.Key(), pay.signType)
 	if e != nil {
@@ -235,36 +235,6 @@ func (pay *Pay) FillRequestData(data PayData) (PayData, error) {
 	}
 	data.Set("sign", sign)
 	return data, nil
-}
-
-func (data PayData) Set(key, val string) {
-	data[key] = val
-}
-
-func (data PayData) Get(key string) string {
-	return data[key]
-}
-
-func (data PayData) IsExist(key string) bool {
-	_, b := data[key]
-	return b
-}
-
-func (data PayData) SortKeys() []string {
-	var keys sort.StringSlice
-	for k := range data {
-		keys = append(keys, k)
-	}
-	sort.Sort(keys)
-	return keys
-}
-
-func (data PayData) ToJson() string {
-	b, e := json.Marshal(&data)
-	if e != nil {
-		return ""
-	}
-	return string(b)
 }
 
 /** UnifiedOrder
@@ -298,7 +268,7 @@ func (pay *Pay) unifiedOrder(data PayData, connectTimeoutMs int, readTimeoutMs i
 	if err != nil {
 		return nil, err
 	}
-	return XmlToMap(resp), nil
+	return util.XmlToMap(resp), nil
 }
 
 /**
@@ -328,7 +298,7 @@ func (pay *Pay) closeOrder(data PayData, connectTimeoutMs, readTimeoutMs int) (P
 	if err != nil {
 		return nil, err
 	}
-	return XmlToMap(resp), nil
+	return util.XmlToMap(resp), nil
 }
 
 /** QueryOrder
@@ -357,7 +327,7 @@ func (pay *Pay) queryOrder(data PayData, connectTimeoutMs int, readTimeoutMs int
 	if err != nil {
 		return nil, err
 	}
-	return XmlToMap(resp), nil
+	return util.XmlToMap(resp), nil
 }
 
 /** ReverseOrder
@@ -387,7 +357,7 @@ func (pay *Pay) reverseOrder(data PayData, connectTimeoutMs int, readTimeoutMs i
 		return nil, err
 	}
 
-	return XmlToMap(resp), nil
+	return util.XmlToMap(resp), nil
 }
 
 /** Refund
@@ -419,7 +389,7 @@ func (pay *Pay) refund(data PayData, connectTimeoutMs int, readTimeoutMs int) (P
 		return nil, err
 	}
 
-	return XmlToMap(resp), nil
+	return util.XmlToMap(resp), nil
 }
 
 /** ShortUrl
@@ -449,7 +419,7 @@ func (pay *Pay) shortUrl(data PayData, connectTimeoutMs int, readTimeoutMs int) 
 	if err != nil {
 		return nil, err
 	}
-	return XmlToMap(resp), nil
+	return util.XmlToMap(resp), nil
 }
 
 func (pay *Pay) QueryRefund(data PayData) (PayData, error) {
@@ -466,7 +436,7 @@ func (pay *Pay) queryRefund(data PayData, connectTimeoutMs int, readTimeoutMs in
 		return nil, err
 	}
 
-	return XmlToMap(resp), nil
+	return util.XmlToMap(resp), nil
 }
 
 /** DownloadBill
@@ -501,7 +471,7 @@ func (pay *Pay) downloadBill(data PayData, connectTimeoutMs int, readTimeoutMs i
 	}
 	var ret PayData
 	if strings.Index(resp, "<") == 0 {
-		ret = XmlToMap(resp)
+		ret = util.XmlToMap(resp)
 	} else {
 		ret = make(PayData)
 		ret.Set("return_code", SUCCESS)
@@ -538,7 +508,7 @@ func (pay *Pay) report(data PayData, connectTimeoutMs int, readTimeoutMs int) (P
 	if err != nil {
 		return nil, err
 	}
-	return XmlToMap(resp), nil
+	return util.XmlToMap(resp), nil
 }
 
 /** AuthCodeToOpenid
@@ -568,7 +538,7 @@ func (pay *Pay) authCodeToOpenid(data PayData, connectTimeoutMs int, readTimeout
 	if err != nil {
 		return nil, err
 	}
-	return XmlToMap(resp), nil
+	return util.XmlToMap(resp), nil
 }
 
 /** MicroPay
@@ -598,7 +568,7 @@ func (pay *Pay) microPay(data PayData, connectTimeoutMs int, readTimeoutMs int) 
 	if err != nil {
 		return nil, err
 	}
-	return XmlToMap(resp), nil
+	return util.XmlToMap(resp), nil
 }
 
 /** MicroPayWithPos
@@ -627,7 +597,7 @@ func (pay *Pay) microPayWithPosConnectTimeout(data PayData, connectTimeoutMs int
 	var err error
 	var lastResult PayData
 	for {
-		startTimestampMs := CurrentTimeStampMS()
+		startTimestampMs := util.CurrentTimeStampMS()
 		readTimeoutMs := remainingTimeMs - connectTimeoutMs
 		if readTimeoutMs > 1000 {
 			lastResult, err = pay.microPay(data, connectTimeoutMs, readTimeoutMs)
@@ -641,7 +611,7 @@ func (pay *Pay) microPayWithPosConnectTimeout(data PayData, connectTimeoutMs int
 				}
 				// 看错误码，若支付结果未知，则重试提交刷卡支付
 				if errCode == SYSTEMERROR || errCode == BANKERROR || errCode == USERPAYING {
-					remainingTimeMs = remainingTimeMs - (int)(CurrentTimeStampMS()-startTimestampMs)
+					remainingTimeMs = remainingTimeMs - (int)(util.CurrentTimeStampMS()-startTimestampMs)
 					if remainingTimeMs <= 100 {
 						break
 					}
