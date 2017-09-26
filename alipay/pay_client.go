@@ -1,5 +1,11 @@
 package alipay
 
+import (
+	"log"
+
+	"github.com/godcong/wopay/wxpay"
+)
+
 type payClient struct {
 	serverUrl       string
 	appId           string
@@ -15,22 +21,31 @@ type payClient struct {
 	readTimeout     int //= 15000
 }
 
-func NewPayClient(serverUrl, appId, privateKey, format,
-	charset, alipayPulicKey, signType,
-	encryptKey, encryptType string) PayClient {
+func defaultPayClient(serverUrl, appId, priviteKey string) *payClient {
 	return &payClient{
 		serverUrl:       serverUrl,
 		appId:           appId,
-		privateKey:      privateKey,
-		format:          format,
-		charset:         charset,
-		alipayPublicKey: alipayPulicKey,
-		signType:        signType,
-		encryptKey:      encryptKey,
-		encryptType:     encryptType,
+		format:          FORMAT_JSON,
+		alipayPublicKey: "",
+		privateKey:      priviteKey,
+		signType:        SIGN_TYPE_RSA,
+		encryptType:     ENCRYPT_TYPE_AES,
 		connectTimeout:  3000,
 		readTimeout:     15000,
 	}
+}
+
+func NewPayClient(serverUrl, appId, privateKey, format,
+	charset, alipayPulicKey, signType,
+	encryptKey, encryptType string) PayClient {
+	client := defaultPayClient(serverUrl, appId, privateKey)
+	client.format = format
+	client.charset = charset
+	client.alipayPublicKey = alipayPulicKey
+	client.signType = signType
+	client.encryptKey = encryptKey
+	client.encryptType = encryptType
+	return client
 }
 
 type PayClient interface {
@@ -104,4 +119,12 @@ func (*payClient) SdkExecute(request PayRequest) (PayResponse, error) {
 
 func (*payClient) ParseAppSyncResult(result map[string]string, request PayRequest) (PayResponse, error) {
 	panic("implement me")
+}
+
+func (*payClient) doPost(request PayRequest,
+	accessToken,
+	appAuthToken string) (PayResponse, error) {
+	data := wxpay.PayData{}
+	//Todo
+	log.Println(data)
 }

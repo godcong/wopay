@@ -7,6 +7,10 @@ import (
 
 type PayData map[string]string
 
+func ParseDate(v map[string]string) PayData {
+	return PayData(v)
+}
+
 func (data PayData) Set(key, val string) {
 	data[key] = val
 }
@@ -37,8 +41,6 @@ func (data PayData) ToJson() string {
 	return string(b)
 }
 
-type ST []string
-
-func (data ST) Set(val string) {
-	data = ST{val}
+func (data PayData) ToMap() map[string]string {
+	return data
 }
