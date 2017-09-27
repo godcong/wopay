@@ -128,3 +128,7 @@ func (*payClient) doPost(request PayRequest,
 	//Todo
 	log.Println(data)
 }
+
+func getRequestHolderWithSign(result map[string]string, request PayRequest) (PayResponse, error) {
+
+}
