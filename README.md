@@ -13,6 +13,8 @@
 go get github.com/godcong/wopay
 
 2. 配置config.toml
+//TODO 
+    暂通过SetConfig方法直接设定配置信息
 
 3. 微信授权：  
     取得OpenId:  
