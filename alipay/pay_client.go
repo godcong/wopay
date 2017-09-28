@@ -127,8 +127,17 @@ func (*payClient) doPost(request PayRequest,
 	data := wxpay.PayData{}
 	//Todo
 	log.Println(data)
+	panic("")
 }
 
-func getRequestHolderWithSign(result map[string]string, request PayRequest) (PayResponse, error) {
+func (*payClient) GetRequestHolderWithSign(result map[string]string, request PayRequest) (PayResponse, error) {
+	panic("")
+	//requestHolder := RequestHolder{}
+	//data := util.ParseDate(request.GetTextParams())
+	////request.
+	//if !data.IsExist(BIZ_CONTENT_KEY) &&
+	//	request.GetBizModel() != nil {
+	//		json.Marshal()
+	//}
 
 }

@@ -153,18 +153,18 @@ type payRequest struct {
 	/**
 	* add user-defined text parameters
 	 */
-	udfParams map[string]string
+	UdfParams map[string]string
 	/**
 	* 统一收单下单并支付页面接口
 	 */
-	bizContent   string
-	terminalType string
-	terminalInfo string
-	prodCode     string
-	notifyUrl    string
-	returnUrl    string
-	needEncrypt  bool
-	bizModel     interface{}
+	BizContent   string
+	TerminalType string
+	TerminalInfo string
+	ProdCode     string
+	NotifyUrl    string
+	ReturnUrl    string
+	NeedEncrypt  bool
+	BizModel     PayObject
 }
 
 func (*payRequest) GetCode() string {
@@ -287,12 +287,12 @@ func (*payRequest) SetNeedEncrypt(needEncrypt bool) {
 	panic("implement me")
 }
 
-func (*payRequest) GetBizModel() PayObject {
-	panic("implement me")
+func (r *payRequest) GetBizModel() PayObject {
+	return r.BizModel
 }
 
-func (*payRequest) SetBizModel(bizModel PayObject) {
-	panic("implement me")
+func (r *payRequest) SetBizModel(bizModel PayObject) {
+	r.BizModel = bizModel
 }
 
 func NewPayRequest() PayRequest {

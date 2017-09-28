@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/godcong/wopay/util"
 )
 
 const DEFAULT_CONNECT_TIMEOUT_MS = 6 * 1000
@@ -54,7 +56,7 @@ func (report *PayReport) Report(uuid string, elapsedTimeMillis int64,
 	firstDomain string, primaryDomain bool, firstConnectTimeoutMillis,
 	firstReadTimeoutMillis int, firstHasDnsError, firstHasConnectTimeout,
 	firstHasReadTimeout bool) {
-	currentTimestamp := CurrentTimeStamp()
+	currentTimestamp := util.CurrentTimeStamp()
 	reportInfo := NewReportInfo(uuid,
 		currentTimestamp,
 		elapsedTimeMillis,
@@ -126,7 +128,7 @@ func (r *ReportInfo) ToLineString(key string) string {
 		strconv.FormatInt(int64(r.FirstHasReadTimeout), 10),
 	}
 	s := strings.Join(obj, ",") + ","
-	return s + MakeSignHMACSHA256(s, key)
+	return s + util.MakeSignHMACSHA256(s, key)
 }
 
 func ParseInt(b bool) (i int) {
