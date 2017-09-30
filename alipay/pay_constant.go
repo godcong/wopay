@@ -50,7 +50,7 @@ const ENCRYPT_TYPE = "encrypt_type"
 const BIZ_CONTENT_KEY = "biz_content"
 
 /** 默认时间格式 **/
-const DATE_TIME_FORMAT = "2006-01-02 03:04:05"
+const DATE_TIME_FORMAT = "2006-01-02 15:04:05"
 
 /**  Date默认时区 **/
 const DATE_TIMEZONE = "Asia/Shanghai"

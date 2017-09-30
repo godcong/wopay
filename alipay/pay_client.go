@@ -3,6 +3,9 @@ package alipay
 import (
 	"log"
 
+	"time"
+
+	"github.com/godcong/wopay/util"
 	"github.com/godcong/wopay/wxpay"
 )
 
@@ -130,7 +133,7 @@ func (*payClient) doPost(request PayRequest,
 	panic("")
 }
 
-func (*payClient) GetRequestHolderWithSign(result map[string]string, request PayRequest) (PayResponse, error) {
+func (*payClient) GetRequestHolderWithSign(request PayRequest, accessToken, appToken string) (PayResponse, error) {
 	panic("")
 	//requestHolder := RequestHolder{}
 	//data := util.ParseDate(request.GetTextParams())
@@ -139,5 +142,49 @@ func (*payClient) GetRequestHolderWithSign(result map[string]string, request Pay
 	//	request.GetBizModel() != nil {
 	//		json.Marshal()
 	//}
+
+}
+
+func (c *payClient) getRequestHolderWithSign(request PayRequest, accessToken, appToken string) (RequestHolder, error) {
+	panic("")
+	requestHolder := RequestHolder{}
+	//data := util.ParseDate(request.GetTextParams())
+	////request.
+	//if !data.IsExist(BIZ_CONTENT_KEY) &&
+	//	request.GetBizModel() != nil {
+	//		json.Marshal()
+	//}
+	if c.charset == "" {
+		c.charset = CHARSET_UTF8
+	}
+
+	protocalMustParams := make(util.PayData)
+	protocalMustParams.Set(METHOD, request.GetApiMethodName())
+	protocalMustParams.Set(VERSION, request.GetApiVersion())
+	protocalMustParams.Set(APP_ID, c.appId)
+	protocalMustParams.Set(SIGN_TYPE, c.signType)
+	protocalMustParams.Set(TERMINAL_TYPE, request.GetTerminalType())
+	protocalMustParams.Set(TERMINAL_INFO, request.GetTerminalInfo())
+	protocalMustParams.Set(NOTIFY_URL, request.GetNotifyUrl())
+	protocalMustParams.Set(RETURN_URL, request.GetReturnUrl())
+	protocalMustParams.Set(CHARSET, c.charset)
+
+	if request.IsNeedEncrypt() {
+		protocalMustParams.Set(ENCRYPT_TYPE, c.encryptType)
+	}
+
+	loc, _ := time.LoadLocation(DATE_TIMEZONE)
+	protocalMustParams.Set(TIMESTAMP, time.Now().In(loc).Format(DATE_TIME_FORMAT))
+	requestHolder.ProtocalMustParams = protocalMustParams
+
+	protocalOptParams := make(util.PayData)
+	protocalOptParams.Set(FORMAT, c.format)
+	protocalOptParams.Set(ACCESS_TOKEN, accessToken)
+	protocalOptParams.Set(ALIPAY_SDK, SDK_VERSION)
+	protocalOptParams.Set(PROD_CODE, request.GetProdCode())
+	requestHolder.ProtocalOptParams = protocalOptParams
+	if c.signType != "" {
+
+	}
 
 }
