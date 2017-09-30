@@ -186,5 +186,5 @@ func (c *payClient) getRequestHolderWithSign(request PayRequest, accessToken, ap
 	if c.signType != "" {
 
 	}
-
+	return requestHolder, nil
 }
