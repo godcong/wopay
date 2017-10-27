@@ -71,3 +71,10 @@ func (data PayData) ToJson() string {
 func (data PayData) ToMap() map[string]string {
 	return data
 }
+
+func (data PayData) IsNil() bool {
+	if data == nil || len(data) == 0 {
+		return true
+	}
+	return false
+}

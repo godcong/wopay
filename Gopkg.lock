@@ -31,9 +31,16 @@
   packages = [".","cache","context","js","material","menu","message","oauth","server","util"]
   revision = "3f720b64c98c33f780cfd252dbd9913f5b5ae1df"
 
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/text"
+  packages = ["encoding","encoding/internal","encoding/internal/identifier","encoding/simplifiedchinese","internal/gen","transform","unicode/cldr"]
+  revision = "6eab0e8f74e86c598ec3b6fad4888e0c11482d48"
+  source = "github.com/golang/text"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "2f0aa164af76a66af18abb8760766c742b72c03a881489eed5ec9cf2fedbf736"
+  inputs-digest = "e773dde18b9733e91d0cb3f3460db7dd95fcf8efdc453651cfdaee8a55e79d4a"
   solver-name = "gps-cdcl"
   solver-version = 1

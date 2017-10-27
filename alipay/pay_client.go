@@ -5,12 +5,14 @@ import (
 
 	"time"
 
+	"strings"
+
 	"github.com/godcong/wopay/util"
 	"github.com/godcong/wopay/wxpay"
 )
 
 type payClient struct {
-	serverUrl       string
+	serverURL       string
 	appId           string
 	privateKey      string
 	prodCode        string
@@ -26,7 +28,7 @@ type payClient struct {
 
 func defaultPayClient(serverUrl, appId, priviteKey string) *payClient {
 	return &payClient{
-		serverUrl:       serverUrl,
+		serverURL:       serverUrl,
 		appId:           appId,
 		format:          FORMAT_JSON,
 		alipayPublicKey: "",
@@ -124,26 +126,19 @@ func (*payClient) ParseAppSyncResult(result map[string]string, request PayReques
 	panic("implement me")
 }
 
-func (*payClient) doPost(request PayRequest,
+func (c *payClient) doPost(request PayRequest,
 	accessToken,
 	appAuthToken string) (PayResponse, error) {
 	data := wxpay.PayData{}
-	//Todo
+	requestHolder, err := c.getRequestHolderWithSign(request, accessToken, appAuthToken)
 	log.Println(data)
 	panic("")
 }
 
-func (*payClient) GetRequestHolderWithSign(request PayRequest, accessToken, appToken string) (PayResponse, error) {
-	panic("")
-	//requestHolder := RequestHolder{}
-	//data := util.ParseDate(request.GetTextParams())
-	////request.
-	//if !data.IsExist(BIZ_CONTENT_KEY) &&
-	//	request.GetBizModel() != nil {
-	//		json.Marshal()
-	//}
-
-}
+//func (c *payClient) GetRequestHolderWithSign(request PayRequest, accessToken, appToken string) (RequestHolder, error) {
+//	return c.getRequestHolderWithSign(request, accessToken, appToken)
+//
+//}
 
 func (c *payClient) getRequestHolderWithSign(request PayRequest, accessToken, appToken string) (RequestHolder, error) {
 	panic("")
@@ -187,4 +182,23 @@ func (c *payClient) getRequestHolderWithSign(request PayRequest, accessToken, ap
 
 	}
 	return requestHolder, nil
+}
+
+func (c *payClient) getRequestUrl(holder RequestHolder) (string, error) {
+	sysMustQuery, e := util.BuildQuery(holder.ProtocalMustParams,
+		c.charset)
+	if e != nil {
+		return "", e
+	}
+	sysOptQuery, e := util.BuildQuery(holder.ProtocalOptParams, c.charset)
+	if e != nil {
+		return "", e
+	}
+
+	urlSb := strings.Join([]string{c.serverURL, sysMustQuery}, "?")
+
+	if sysOptQuery != "" && len(sysOptQuery) > 0 {
+		urlSb = strings.Join([]string{urlSb, sysOptQuery}, "&")
+	}
+	return urlSb, nil
 }

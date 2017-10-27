@@ -4,7 +4,7 @@
 # Refer to https://github.com/golang/dep/blob/master/docs/Gopkg.toml.md
 # for detailed Gopkg.toml documentation.
 #
-# required = ["golang.org/x/net","google.golang.org/appengine"]
+ required = ["https://github.com/golang/text"]
 # ignored = ["github.com/user/project/pkgX", "bitbucket.org/user/project/pkgA/pkgY"]
 #
 # [[constraint]]
@@ -33,7 +33,15 @@
 #  name = "golang.org/x/oauth2"
 #  branch = "master"
 #  source = "github.com/golang/oauth2"
+#[[constraint]]
+#  branch = "master"
+#  name = "github.com/golang/text"
 #
+[[constraint]]
+  name = "golang.org/x/text"
+  branch = "master"
+  source = "github.com/golang/text"
+
 #[[constraint]]
 #  name = "golang.org/x/net"
 #  branch = "release-branch.go1.9"
@@ -43,4 +51,3 @@
 #   name = "google.golang.org/appengine"
 #   branch = "master"
 #   source = "github.com/golang/appengine"
-

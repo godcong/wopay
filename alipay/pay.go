@@ -1,5 +1,5 @@
 package alipay
 
-func Pay() {
+func pay() {
 
 }
