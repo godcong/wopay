@@ -21,3 +21,7 @@ func BuildQuery(data PayData, charset string) (string, error) {
 
 	return strings.Join(sign, "&"), nil
 }
+
+func DoPost(url, ctype string, content []byte, connectTimeout, readTimeout int) (string, error) {
+	return "", nil
+}

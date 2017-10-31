@@ -1,8 +1,6 @@
 package alipay
 
 import (
-	"log"
-
 	"time"
 
 	"strings"
@@ -126,13 +124,15 @@ func (*payClient) ParseAppSyncResult(result map[string]string, request PayReques
 	panic("implement me")
 }
 
-func (c *payClient) doPost(request PayRequest,
-	accessToken,
-	appAuthToken string) (PayResponse, error) {
+func (c *payClient) doPost(request PayRequest, accessToken, appAuthToken string) (PayResponse, error) {
 	data := wxpay.PayData{}
 	requestHolder, err := c.getRequestHolderWithSign(request, accessToken, appAuthToken)
-	log.Println(data)
-	panic("")
+	if err != nil {
+		return nil, err
+	}
+	url, err := c.getRequestUrl(requestHolder)
+	rsp = util.doPost(url, requestHolder.getApplicationParams(), charset,
+		connectTimeout, readTimeout)
 }
 
 //func (c *payClient) GetRequestHolderWithSign(request PayRequest, accessToken, appToken string) (RequestHolder, error) {
