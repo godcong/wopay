@@ -8,7 +8,12 @@
 
 
 ## a golang payment interface ##
-
+ 
+# 使用微信支付的请关注我的新项目
+https://github.com/godcong/wego
+该项目将涵盖支付,小程序,公众号,企业等功能
+ 
+ 
 1. 获取包：
 go get github.com/godcong/wopay
 
